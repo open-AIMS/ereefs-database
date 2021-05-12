@@ -1,0 +1,89 @@
+{
+    "_id": {
+        "id": "default-render",
+        "datatype": "RENDER"
+    },
+    "lastModified": "2019-08-14T16:10:00.000+08:00",
+
+    "directoryUri": "/home/ereefs/derived/ncanimate/products",
+    "timezone": "Australia/Brisbane",
+    "videoTimeIncrement": {
+        "increment": 1,
+        "unit": "YEAR"
+    },
+
+    "maps": {
+        "svgMap": {
+            "format": "SVG"
+        },
+        "pngMap": {
+            "format": "PNG"
+        }
+    },
+
+    "videos": {
+        "mp4Video": {
+            "format": "MP4",
+            "fps": 12,
+            "blockSize": [16, 8],
+            "commandLines": [
+                // https://ffmpeg.org/ffmpeg-filters.html#pad
+                "/usr/bin/ffmpeg -y -r \"${ctx.renderFile.fps}\" -i \"${ctx.videoFrameDirectory}/${ctx.frameFilenamePrefix}_%05d.png\" -vcodec libx264 -profile:v baseline -pix_fmt yuv420p -crf 29 -vf \"pad=${ctx.productWidth}:${ctx.productHeight}:${ctx.padding.left}:${ctx.padding.top}:white\" \"${ctx.outputDirectory}/temp_${ctx.outputFilename}\"",
+                "/usr/bin/qt-faststart \"${ctx.outputDirectory}/temp_${ctx.outputFilename}\" \"${ctx.outputFile}\"",
+                "rm \"${ctx.outputDirectory}/temp_${ctx.outputFilename}\""
+            ]
+        },
+        "wmvVideo": {
+            "format": "WMV",
+            "fps": 10,
+            "commandLines": ["/usr/bin/ffmpeg -y -r \"${ctx.renderFile.fps}\" -i \"${ctx.videoFrameDirectory}/${ctx.frameFilenamePrefix}_%05d.png\" -qscale 10 -s ${ctx.productWidth}x${ctx.productHeight} \"${ctx.outputFile}\""],
+            "maxWidth": 1280
+        }
+    },
+
+    "metadata": {
+        "properties": {
+            "region": {
+                "id": "${ctx.region.id}",
+                "label": "${ctx.region.label}",
+                "bbox": {
+                    "east": "${ctx.region.bbox.east}",
+                    "north": "${ctx.region.bbox.north}",
+                    "south": "${ctx.region.bbox.south}",
+                    "west": "${ctx.region.bbox.west}"
+                }
+            },
+            "targetHeight": "${ctx.targetHeight}",
+            "framePeriod": "${ctx.framePeriod}",
+
+            "testArray": [
+                "value1",
+                "value2",
+                [
+                    "value3.1",
+                    "value3.2",
+                    {
+                        "id": "value3.3",
+                        "nestedArrayValue": [
+                            "value3.3.1",
+                            "value3.3.2"
+                        ],
+                        "nestedObjectValue": {
+                            "id": "value3.3.3"
+                        }
+                    }
+                ],
+                {
+                    "id": "value4",
+                    "nestedArrayValue": [
+                        "value4.1",
+                        "value4.2"
+                    ],
+                    "nestedObjectValue": {
+                        "id": "value4.3"
+                    }
+                }
+            ]
+        }
+    }
+}

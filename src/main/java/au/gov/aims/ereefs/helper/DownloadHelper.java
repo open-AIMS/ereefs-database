@@ -1,0 +1,130 @@
+/*
+ *  Copyright (C) 2019 Australian Institute of Marine Science
+ *
+ *  Contact: Gael Lafond <g.lafond@aims.gov.au>
+ *
+ *  This program is free software: you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation, either version 3 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+package au.gov.aims.ereefs.helper;
+
+import au.gov.aims.ereefs.database.CacheStrategy;
+import au.gov.aims.ereefs.database.DatabaseClient;
+import au.gov.aims.ereefs.database.manager.DownloadManager;
+import au.gov.aims.ereefs.bean.download.DownloadBean;
+import au.gov.aims.ereefs.database.table.JSONObjectIterable;
+import org.json.JSONObject;
+
+import java.io.IOException;
+import java.util.Iterator;
+
+/**
+ * Helper class used to simplify interaction with the database.
+ *
+ * <p>This class relates to the {@link DownloadBean},
+ * used with the {@code ereefs-download-manager} project.</p>
+ */
+public class DownloadHelper {
+    private DatabaseClient dbClient;
+    private DownloadManager downloadManager;
+
+    /**
+     * @deprecated Use DownloadHelper(DatabaseClient dbClient, CacheStrategy cacheStrategy)
+     */
+    @Deprecated
+    public DownloadHelper(DatabaseClient dbClient) {
+        this(dbClient, CacheStrategy.NONE);
+    }
+
+    /**
+     * Creates a {@code DownloadHelper} using a database client and a cache strategy.
+     *
+     * @param dbClient the {@link DatabaseClient} used to query the database.
+     * @param cacheStrategy the database cache strategy.
+     */
+    public DownloadHelper(DatabaseClient dbClient, CacheStrategy cacheStrategy) {
+        this.dbClient = dbClient;
+        this.downloadManager = new DownloadManager(this.dbClient, cacheStrategy);
+    }
+
+    /**
+     * Set the {@link DownloadManager} cache strategy.
+     * @param cacheStrategy the new cache strategy.
+     */
+    public void setCacheStrategy(CacheStrategy cacheStrategy) {
+        this.downloadManager.setCacheStrategy(cacheStrategy);
+    }
+
+    /**
+     * Clear the {@link DownloadManager} cache.
+     * @throws IOException if something goes wrong while clearing the disk cache.
+     */
+    public void clearCache() throws IOException {
+        this.downloadManager.clearCache();
+    }
+
+    /**
+     * Returns the {@link DatabaseClient} that was set in the constructor.
+     * @return the {@link DatabaseClient}.
+     */
+    public DatabaseClient getDbClient() {
+        return this.dbClient;
+    }
+
+    /**
+     * Returns an {@code Iterable} list of all {@link DownloadBean}
+     * found in the database.
+     *
+     * @return an {@code Iterable} list of all {@link DownloadBean}.
+     * @throws Exception if the database is unreachable.
+     */
+    public Iterable<DownloadBean> getDownloads() throws Exception {
+        JSONObjectIterable jsonDownloads = this.downloadManager.selectAll();
+        return this.getIterable(jsonDownloads.iterator());
+    }
+
+    /**
+     * Returns an {@code Iterable} list of all enabled {@link DownloadBean}
+     * found in the database.
+     *
+     * @return an {@code Iterable} list of all enabled {@link DownloadBean}.
+     * @throws Exception if the database is unreachable.
+     */
+    public Iterable<DownloadBean> getEnabledDownloads() throws Exception {
+        JSONObjectIterable jsonDownloads = this.downloadManager.selectAllEnabled();
+        return this.getIterable(jsonDownloads.iterator());
+    }
+
+    private Iterable<DownloadBean> getIterable(Iterator<JSONObject> jsonDownloadIterator) {
+        return new Iterable<DownloadBean>() {
+            @Override
+            public Iterator<DownloadBean> iterator() {
+                return new Iterator<DownloadBean>() {
+                    @Override
+                    public boolean hasNext() {
+                        return jsonDownloadIterator.hasNext();
+                    }
+
+                    @Override
+                    public DownloadBean next() {
+                        JSONObject jsonConfig = jsonDownloadIterator.next();
+                        if (jsonConfig == null) {
+                            return null;
+                        }
+                        return new DownloadBean(jsonConfig);
+                    }
+                };
+            }
+        };
+    }
+}

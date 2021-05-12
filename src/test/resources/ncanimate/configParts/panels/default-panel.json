@@ -1,0 +1,20 @@
+{
+    "_id": {
+        "id": "default-panel",
+        "datatype": "PANEL"
+    },
+    "lastModified": "2019-08-14T16:10:00.000+08:00",
+
+    "borderColour": "#666666",
+    "borderWidth": 2,
+    "width": 452,
+    "backgroundColour": "#F4FDFD",
+    "title": {
+        "position": {
+            "top": 35,
+            "left": 25
+        },
+        "fontSize": 30,
+        "fontColour": "#000000"
+    }
+}

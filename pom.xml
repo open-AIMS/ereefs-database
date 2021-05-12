@@ -1,0 +1,363 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>au.gov.aims</groupId>
+    <artifactId>ereefs-database</artifactId>
+    <version>0.6.17</version>
+
+    <!--
+        *** IMPORTANT ***
+        Use JDK 1.8
+        The NetCDF library is NOT compatible with recent versions of Java (such as JDK 11).
+        You MUST install the old JDK 1.8 and set your "Project Structure" to use
+        the old Java 1.8 otherwise you WON't be able to run tests or compile this project.
+    -->
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+
+        <!-- Latest version of AWS SDK -->
+        <!-- https://search.maven.org/search?q=g:software.amazon.awssdk%20AND%20a:ssm&core=gav -->
+        <aws.java.sdk.version>2.7.26</aws.java.sdk.version>
+
+        <edalVersion>1.2.4</edalVersion>
+        <netcdfversion>5.0.0-alpha3</netcdfversion>
+
+        <netty.version>4.1.38.Final</netty.version>
+    </properties>
+
+    <repositories>
+        <!-- AIMS ks maven repository on GitHub -->
+        <repository>
+            <id>aims-ks.mvn-mirror-repo</id>
+            <name>AIMS Knowledge System Maven Mirror repository</name>
+            <url>https://raw.githubusercontent.com/aims-ks/mvn-mirror-repo/master/</url>
+        </repository>
+
+        <repository>
+            <id>github_aimsks</id>
+            <name>GitHub AIMS-KS repo</name>
+            <url>https://maven.pkg.github.com/aims-ks/*</url>
+        </repository>
+
+        <repository>
+            <id>github_openaims</id>
+            <name>GitHub Open-AIMS repo</name>
+            <url>https://maven.pkg.github.com/open-AIMS/*</url>
+        </repository>
+    </repositories>
+
+    <dependencies>
+        <dependency>
+            <groupId>au.gov.aims</groupId>
+            <artifactId>json</artifactId>
+            <version>1.3.2</version>
+        </dependency>
+
+        <!-- S3Wrapper - This packages have a LOT of dependencies (because of AWS API) -->
+        <dependency>
+            <groupId>au.gov.aims</groupId>
+            <artifactId>s3wrapper</artifactId>
+            <version>0.4.0</version>
+            <!-- AWS is using an old version of Netty which clashes with MongoDB -->
+            <exclusions>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-buffer</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-codec-http</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-handler</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-resolver</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-transport</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- ############ -->
+        <!-- # Metadata # -->
+        <!-- ############ -->
+
+        <!-- NetCDF libraries -->
+        <!-- Class overwrites - needs to be placed before any other edal dependencies -->
+        <dependency>
+            <groupId>uk.ac.rdg.resc</groupId>
+            <artifactId>edal-common_fix-mem-leak</artifactId>
+            <version>${edalVersion}</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.rdg.resc</groupId>
+            <artifactId>edal-graphics</artifactId>
+            <version>${edalVersion}</version>
+            <type>jar</type>
+            <!-- Prevent loading old libraries - we are using more recent version of those -->
+            <exclusions>
+                <exclusion>
+                    <groupId>commons-io</groupId>
+                    <artifactId>commons-io</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>commons-logging</groupId>
+                    <artifactId>commons-logging</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <!-- The POM for this JAR refer to deleted dependencies. Those needs to be overwritten with versions which actually exists on the repo. -->
+        <!--   http://search.maven.org/#artifactdetails%7Cuk.ac.rdg.resc%7Cedal-cdm%7C1.2.2%7Cjar -->
+        <dependency>
+            <groupId>uk.ac.rdg.resc</groupId>
+            <artifactId>edal-cdm</artifactId>
+            <version>${edalVersion}</version>
+            <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>edu.ucar</groupId>
+                    <artifactId>cdm</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>edu.ucar</groupId>
+                    <artifactId>udunits</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>edu.ucar</groupId>
+                    <artifactId>netcdf4</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>edu.ucar</groupId>
+                    <artifactId>grib</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>edu.ucar</groupId>
+                    <artifactId>opendap</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>edu.ucar</groupId>
+            <artifactId>cdm</artifactId>
+            <version>${netcdfversion}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.ucar</groupId>
+            <artifactId>udunits</artifactId>
+            <version>${netcdfversion}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.ucar</groupId>
+            <artifactId>netcdf4</artifactId>
+            <version>${netcdfversion}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.ucar</groupId>
+            <artifactId>grib</artifactId>
+            <version>${netcdfversion}</version>
+        </dependency>
+        <dependency>
+            <groupId>edu.ucar</groupId>
+            <artifactId>opendap</artifactId>
+            <version>${netcdfversion}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>uk.ac.rdg.resc</groupId>
+            <artifactId>edal-xml-catalogue</artifactId>
+            <version>${edalVersion}</version>
+            <type>jar</type>
+        </dependency>
+
+        <!-- ########### -->
+        <!-- # MongoDB # -->
+        <!-- ########### -->
+        <dependency>
+            <groupId>org.mongodb</groupId>
+            <artifactId>mongo-java-driver</artifactId>
+            <version>3.10.2</version>
+        </dependency>
+
+
+
+
+        <!-- ############### -->
+        <!-- # AWS SSM API # -->
+        <!-- ############### -->
+        <dependency>
+            <groupId>software.amazon.awssdk</groupId>
+            <artifactId>ssm</artifactId>
+            <version>${aws.java.sdk.version}</version>
+            <!-- AWS is using an old version of Netty which clashes with MongoDB -->
+            <exclusions>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-codec-http</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-codec-http2</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-codec</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-transport</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-common</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-buffer</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-handler</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>io.netty</groupId>
+                    <artifactId>netty-transport-native-epoll</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
+
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-http</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec-http2</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-codec</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-common</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-buffer</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-handler</artifactId>
+            <version>${netty.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.netty</groupId>
+            <artifactId>netty-transport-native-epoll</artifactId>
+            <classifier>linux-x86_64</classifier>
+            <version>${netty.version}</version>
+        </dependency>
+
+        <!-- ############## -->
+        <!-- # Unit tests # -->
+        <!-- ############## -->
+
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.12</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- In-memory MongoDB server used to run JUnit tests -->
+        <!--
+            NOTES about in-memory database libraries tested:
+            - fongo (from com.github.fakemongo):
+                Used to be the solution for this, but the library hasn't been updated in a long time.
+                The latest version of MongoDB it supports is 3.6.4, which has a very different API from 3.10.
+            - kmongo-fongo (from org.litote.kmongo):
+                Latest version is 3.10.2, which suggest it would support MongoDB 3.10.2.
+                Unfortunately, it supports up to 3.6.4, just like Fongo.
+            - mongodb-junit-test (from io.fares.junit.mongodb):
+                This library downloads several hundreds of MB on initialisation.
+                It seems like it's running MongoDB in a docker container.
+                Beside been very slow to initialised, overly big for what it needs to do,
+                it only support MongoDB 3.6.5.
+            - mongo-java-server (from de.bwaldvogel):
+                As suggested here: https://github.com/fakemongo/fongo/issues/357
+                It works as expected, it's fast and lightweight and its compatible with the latest version of MongoDB.
+                GitHub: https://github.com/bwaldvogel/mongo-java-server
+        -->
+        <dependency>
+            <groupId>de.bwaldvogel</groupId>
+            <artifactId>mongo-java-server</artifactId>
+            <version>1.18.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <!-- Compile Java Docs -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.2.0</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                        <configuration>
+                            <failOnError>false</failOnError>
+                            <failOnWarnings>false</failOnWarnings>
+                            <stylesheetfile>stylesheet.css</stylesheetfile>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>GitHub Open-AIMS Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/open-AIMS/ereefs-database</url>
+        </repository>
+    </distributionManagement>
+
+</project>
