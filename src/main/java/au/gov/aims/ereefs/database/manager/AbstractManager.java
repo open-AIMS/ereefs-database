@@ -124,6 +124,21 @@ public abstract class AbstractManager<T extends DatabaseTable> {
      * @throws Exception if the table doesn't exists or the database is unreachable.
      */
     public JSONObject save(JSONObject json) throws Exception {
+        return this.save(json, true);
+    }
+
+    /**
+     * Insert or update a document in the database.
+     *
+     * <p>Updates the document if the document's ID exists in the database.
+     *   Insert a new document otherwise.</p>
+     *
+     * @param json the {@code JSONObject} representing the document to save in the database.
+     * @param safe {@code false} to bypass ID safety check. Default {@code true}.
+     * @return the document, as it is in the database after been saved.
+     * @throws Exception if the table doesn't exists or the database is unreachable.
+     */
+    public JSONObject save(JSONObject json, boolean safe) throws Exception {
         if (json == null) {
             throw new IllegalArgumentException("JSON is null");
         }
@@ -134,9 +149,9 @@ public abstract class AbstractManager<T extends DatabaseTable> {
             if (!this.tableExists()) {
                 throw new RuntimeException(String.format("Table %s doesn't exists", this.table.getTableName()));
             }
-            this.table.insert(json);
+            this.table.insert(json, safe);
         } else {
-            this.table.update(json, key);
+            this.table.update(json, key, safe);
         }
 
         return this.table.select(key, CacheStrategy.NONE);

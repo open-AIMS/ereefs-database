@@ -136,13 +136,13 @@ public class MetadataManagerTest extends DatabaseTestBase {
         String smallMetadataStr = IOUtils.toString(smallMetadataInputStream);
         JSONObject smallMetadataJson = new JSONObject(smallMetadataStr);
         smallMetadataJson.put("_id", "downloads/small/small.nc"); // old IDs used to have dots in them
-        DatabaseTableTest.unchecked_insert(metadataManager.getTable(), smallMetadataJson);
+        metadataManager.getTable().insert(smallMetadataJson, false);
 
         InputStream gbr1MetadataInputStream = DownloadManagerTest.class.getClassLoader().getResourceAsStream("metadata/gbr1.nc.json");
         String gbr1MetadataStr = IOUtils.toString(gbr1MetadataInputStream);
         JSONObject gbr1MetadataJson = new JSONObject(gbr1MetadataStr);
         gbr1MetadataJson.put("_id", "downloads/gbr1_v2/gbr1_simple_2014-12-02.nc"); // old IDs used to have dots in them
-        DatabaseTableTest.unchecked_insert(metadataManager.getTable(), gbr1MetadataJson);
+        metadataManager.getTable().insert(gbr1MetadataJson, false);
 
         InputStream randomMetadataInputStream = DownloadManagerTest.class.getClassLoader().getResourceAsStream("metadata/random_data.nc.json");
         String randomMetadataStr = IOUtils.toString(randomMetadataInputStream);
