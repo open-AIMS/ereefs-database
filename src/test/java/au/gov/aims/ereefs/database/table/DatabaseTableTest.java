@@ -226,16 +226,4 @@ public class DatabaseTableTest extends DatabaseTestBase {
 
         Assert.assertEquals("Wrong number of selected items", 4, counter);
     }
-
-    /**
-     * Used with tests outside of this package.
-     * This method is defined here to be able to call the protected
-     * method {@link DatabaseTable#uncheck_insert(JSONObject)}.
-     * @param table
-     * @param json
-     * @throws Exception
-     */
-    public static void unchecked_insert(DatabaseTable table, JSONObject json) throws Exception {
-        table.uncheck_insert(json);
-    }
 }

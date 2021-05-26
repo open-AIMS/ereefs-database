@@ -314,15 +314,23 @@ public abstract class DatabaseTable {
      * @throws Exception if the database is unreachable.
      */
     public void insert(JSONObject json) throws Exception {
-        PrimaryKey pk = this.getPrimaryKey(json);
-        if (!pk.validate()) {
-            throw new IllegalArgumentException(String.format("Invalid primary key: %s", pk));
-        }
-
-        this.uncheck_insert(json);
+        this.insert(json, true);
     }
 
-    protected void uncheck_insert(JSONObject json) throws Exception {
+    /**
+     * Insert a document in the database.
+     * @param json the document to insert in the database table.
+     * @param safe {@code false} to bypass ID safety check. Default {@code true}.
+     * @throws Exception if the database is unreachable.
+     */
+    public void insert(JSONObject json, boolean safe) throws Exception {
+        if (safe) {
+            PrimaryKey pk = this.getPrimaryKey(json);
+            if (!pk.validate()) {
+                throw new IllegalArgumentException(String.format("Invalid primary key: %s", pk));
+            }
+        }
+
         boolean success = false;
         for (int attempt=1; attempt<=this.databaseClient.getDbRetryAttempts() && !success; attempt++) {
             try (MongoClient mongoClient = this.databaseClient.getMongoClient()) {
@@ -360,9 +368,22 @@ public abstract class DatabaseTable {
      * @throws Exception if the database is unreachable.
      */
     public void update(JSONObject json, PrimaryKey primaryKey) throws Exception {
+        this.update(json, primaryKey, true);
+    }
+
+    /**
+     * Update a document in the database.
+     * @param json the document to update.
+     * @param primaryKey the primary key object, before updating the document.
+     * @param safe {@code false} to bypass ID safety check. Default {@code true}.
+     * @throws Exception if the database is unreachable.
+     */
+    public void update(JSONObject json, PrimaryKey primaryKey, boolean safe) throws Exception {
         PrimaryKey newPrimaryKey = this.getPrimaryKey(json);
-        if (!newPrimaryKey.validate()) {
-            throw new IllegalArgumentException(String.format("Invalid primary key: %s", newPrimaryKey));
+        if (safe) {
+            if (!newPrimaryKey.validate()) {
+                throw new IllegalArgumentException(String.format("Invalid primary key: %s", newPrimaryKey));
+            }
         }
 
         this.removeFromCache(primaryKey);

@@ -21,7 +21,6 @@ package au.gov.aims.ereefs.bean.metadata.netcdf;
 import au.gov.aims.ereefs.Utils;
 import au.gov.aims.ereefs.bean.AbstractBean;
 import au.gov.aims.ereefs.bean.NetCDFUtils;
-import au.gov.aims.ereefs.bean.ncanimate.NcAnimateIdBean;
 import au.gov.aims.ereefs.database.manager.MetadataManager;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
@@ -123,13 +122,15 @@ public class NetCDFMetadataBean extends AbstractBean {
         if (json.has("lastModified")) {
             String lastModifiedStr = json.optString("lastModified", null);
 
-            try {
-                DateTime lastModifiedDate = DateTime.parse(lastModifiedStr);
-                if (lastModifiedDate != null) {
-                    this.lastModified = lastModifiedDate.getMillis();
+            if (lastModifiedStr != null) {
+                try {
+                    DateTime lastModifiedDate = DateTime.parse(lastModifiedStr);
+                    if (lastModifiedDate != null) {
+                        this.lastModified = lastModifiedDate.getMillis();
+                    }
+                } catch(Exception ex) {
+                    LOGGER.warn(String.format("Invalid %s for %s: %s", "lastModified", this.id, lastModifiedStr));
                 }
-            } catch(Exception ex) {
-                LOGGER.warn(String.format("Invalid %s for %s: %s", "lastModified", this.id, lastModifiedStr));
             }
         }
 
@@ -137,13 +138,15 @@ public class NetCDFMetadataBean extends AbstractBean {
         if (json.has("lastDownloaded")) {
             String lastDownloadedStr = json.optString("lastDownloaded", null);
 
-            try {
-                DateTime lastDownloadedDate = DateTime.parse(lastDownloadedStr);
-                if (lastDownloadedDate != null) {
-                    this.lastDownloaded = lastDownloadedDate.getMillis();
+            if (lastDownloadedStr != null) {
+                try {
+                    DateTime lastDownloadedDate = DateTime.parse(lastDownloadedStr);
+                    if (lastDownloadedDate != null) {
+                        this.lastDownloaded = lastDownloadedDate.getMillis();
+                    }
+                } catch(Exception ex) {
+                    LOGGER.warn(String.format("Invalid %s for %s: %s", "lastDownloaded", this.id, lastDownloadedStr));
                 }
-            } catch(Exception ex) {
-                LOGGER.warn(String.format("Invalid %s for %s: %s", "lastDownloaded", this.id, lastDownloadedStr));
             }
         }
 
