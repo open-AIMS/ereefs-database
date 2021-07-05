@@ -31,7 +31,8 @@ public class ProductManager extends AbstractSingleKeyManager {
     public static final String NCANIMATE_PRODUCT_TYPE = "ncanimate";
 
     /**
-     * @deprecated Use ProductManager(DatabaseClient dbClient, CacheStrategy cacheStrategy)
+     * @deprecated Use {@link #ProductManager(DatabaseClient, CacheStrategy)}
+     * @param dbClient the {@link DatabaseClient} used to query the database.
      */
     @Deprecated
     public ProductManager(DatabaseClient dbClient) {

@@ -26,7 +26,8 @@ public class TaskHelper {
     private TaskManager taskManager;
 
     /**
-     * @deprecated Use TaskHelper(DatabaseClient dbClient, CacheStrategy cacheStrategy)
+     * @deprecated Use {@link #TaskHelper(DatabaseClient, CacheStrategy)}
+     * @param dbClient the {@link DatabaseClient} used to query the database.
      */
     @Deprecated
     public TaskHelper(DatabaseClient dbClient) {

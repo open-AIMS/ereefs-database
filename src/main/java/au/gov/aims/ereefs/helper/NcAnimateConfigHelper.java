@@ -62,7 +62,8 @@ public class NcAnimateConfigHelper {
     private static Map<String, Map<String, NetCDFMetadataBean>> netCDFAllMetadataMapCache;
 
     /**
-     * @deprecated Use NcAnimateConfigHelper(DatabaseClient dbClient, CacheStrategy cacheStrategy)
+     * @deprecated Use {@link #NcAnimateConfigHelper(DatabaseClient, CacheStrategy)}
+     * @param dbClient the {@link DatabaseClient} used to query the database.
      */
     @Deprecated
     public NcAnimateConfigHelper(DatabaseClient dbClient) {
@@ -193,7 +194,7 @@ public class NcAnimateConfigHelper {
      * configuration is incomplete.</p>
      *
      * @param ncAnimateConfig the {@link NcAnimateConfigBean} configuration document to validate.
-     * @return {@true} if the configuration pass the validation test;
+     * @return {@code true} if the configuration pass the validation test;
      *     throws an {@code IllegalStateException} otherwise.
      */
     public boolean validateNcAnimateConfig(NcAnimateConfigBean ncAnimateConfig) {

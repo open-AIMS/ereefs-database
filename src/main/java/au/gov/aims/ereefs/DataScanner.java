@@ -33,7 +33,7 @@ public class DataScanner {
      * Loop through all the data for a NetCDF file to verify if it's corrupted.
      *
      * @param netCDFFile the NetCDF file to scan.
-     * @return {@true} of the file is valid; {@code false} otherwise.
+     * @return {@code true} of the file is valid; {@code false} otherwise.
      * @throws IOException exception which may occur while reading an inaccessible or corrupted NetCDF file.
      * @throws InvalidRangeException exception which may occur while reading a corrupted NetCDF file.
      */

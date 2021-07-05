@@ -20,7 +20,7 @@ import org.json.JSONObject;
  * <ul>
  *     <li><em>SVG</em>: <a href="https://en.wikipedia.org/wiki/Scalable_Vector_Graphics" target="_blank">Scalable Vector Graphics</a>. Large file size but very flexible.
  *         They can be edited using vector graphics software such as <a href="https://inkscape.org/" target="_blank">InkScape</a>
- *         or <a href="https://www.adobe.com/au/products/illustrator.html" target="_blank">Adobe Illustrator</a>.<br/>
+ *         or <a href="https://www.adobe.com/au/products/illustrator.html" target="_blank">Adobe Illustrator</a>.<br>
  *         NOTE: <a href="https://inkscape.org/" target="_blank">InkScape</a> is recommended since it support SVG {@code groups},
  *         which are shown as layers. {@code Adobe Illustrator} has a proprietary implementation of layers which
  *         doesn't translate to SVG.</li>

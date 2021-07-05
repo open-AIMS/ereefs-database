@@ -79,9 +79,9 @@ public class NcAnimatePositionBean extends AbstractNcAnimateBean {
      *     no way to remove an attribute using layer overwrites.</p>
      *
      * <p>In this case, the {@code pos} attribute must be provided to specified
-     *     which attribute should be considered.<p>
+     *     which attribute should be considered.</p>
      *
-     * <p>Example:<p>
+     * <p>Example:</p>
      * <pre class="code">
      * {
      *     "top": 16,

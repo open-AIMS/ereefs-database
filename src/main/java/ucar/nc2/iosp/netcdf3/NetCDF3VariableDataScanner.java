@@ -71,7 +71,7 @@ public class NetCDF3VariableDataScanner {
     /**
      * Read all the data available for a variable, in order to verify if it's corrupted.
      *
-     * @param raf the {@link RandomAccessFile} for the NetCDF file containing the data for variable to scan.<br/>
+     * @param raf the {@link RandomAccessFile} for the NetCDF file containing the data for variable to scan.<br>
      *     NOTE: This attribute is ignored. It was added to the method definition to be consistent with
      *     {@link ucar.nc2.iosp.hdf5.NetCDF4VariableDataScanner#scanVariable(RandomAccessFile, Variable)}.
      * @param variable the variable to scan.

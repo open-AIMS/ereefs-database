@@ -21,7 +21,8 @@ public class DownloadManager extends AbstractSingleKeyManager {
     private static final String ENABLED_COLUMN_NAME = "enabled";
 
     /**
-     * @deprecated Use DownloadManager(DatabaseClient dbClient, CacheStrategy cacheStrategy)
+     * @deprecated Use {@link #DownloadManager(DatabaseClient, CacheStrategy)}
+     * @param dbClient the {@link DatabaseClient} used to query the database.
      */
     @Deprecated
     public DownloadManager(DatabaseClient dbClient) {

@@ -130,7 +130,7 @@ public class NetCDFUtils {
      * @return a {@link DataDomain} object, which is a simple container object
      *   for {@code min} and {@code max} values.
      */
-    public static DataDomain computeMinMax(File netCDFFile, String variableId, Double depth) throws IOException {
+    public static DataDomain computeMinMax(File netCDFFile, String variableId, Double depth) {
         return NetCDFUtils.computeMinMax(netCDFFile, variableId, depth, null);
     }
 
@@ -148,7 +148,7 @@ public class NetCDFUtils {
      * @return a {@link DataDomain} object, which is a simple container object
      *   for {@code min} and {@code max} values.
      */
-    public static DataDomain computeMinMax(File netCDFFile, String variableId, Double depth, Integer percentile) throws IOException {
+    public static DataDomain computeMinMax(File netCDFFile, String variableId, Double depth, Integer percentile) {
         if (percentile == null) {
             percentile = 1;
         }

@@ -62,6 +62,7 @@ public class NcAnimateIdBean {
      * Load the attributes of the NcAnimate ID bean part from a {@code JSONWrapperObject}.
      *
      * @param json {@code JSONWrapperObject} representing a NcAnimate ID bean part.
+     * @param idPropertyName name of the property used for the ID in the JSON document.
      * @throws Exception if the json object is malformed.
      */
     protected void parse(JSONWrapperObject json, String idPropertyName) throws Exception {
@@ -104,8 +105,8 @@ public class NcAnimateIdBean {
     }
 
     /**
-     * Returns the ID {@link ConfigPartManager.Datatype}.
-     * @return the ID {@link ConfigPartManager.Datatype}.
+     * Returns the ID {@link au.gov.aims.ereefs.database.manager.ncanimate.ConfigPartManager.Datatype}.
+     * @return the ID {@link au.gov.aims.ereefs.database.manager.ncanimate.ConfigPartManager.Datatype}.
      */
     public ConfigPartManager.Datatype getDatatype() {
         return this.datatype;
