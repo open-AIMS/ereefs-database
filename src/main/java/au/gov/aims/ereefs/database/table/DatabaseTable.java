@@ -83,7 +83,7 @@ public abstract class DatabaseTable {
     }
 
     /**
-     * @deprecated Use setCacheStrategy(CacheStrategy.MEMORY)
+     * @deprecated Use {@link #setCacheStrategy(CacheStrategy)} with {@link CacheStrategy#MEMORY}
      */
     @Deprecated
     public void enableCache() {
@@ -91,7 +91,7 @@ public abstract class DatabaseTable {
     }
 
     /**
-     * @deprecated Use setCacheStrategy(CacheStrategy.NONE)
+     * @deprecated Use {@link #setCacheStrategy(CacheStrategy)} with {@link CacheStrategy#NONE}
      */
     @Deprecated
     public void disableCache() {
@@ -100,7 +100,7 @@ public abstract class DatabaseTable {
 
     /**
      * Empty the cache.
-     * @throws IOException if something goes while emptying the
+     * @throws IOException if something goes wrong while emptying the
      *   {@link CacheStrategy#DISK} cache, if {@link CacheStrategy#DISK} cache is used.
      */
     public void clearCache() throws IOException {
@@ -204,7 +204,8 @@ public abstract class DatabaseTable {
      *
      * <p>NOTE: "this.getTable() != null" does NOT work.</p>
      *
-     * @return {@true} is the table exists; {@false} otherwise.
+     * @return {@code true} is the table exists; {@code false} otherwise.
+     * @throws Exception if the database is unreachable.
      */
     public boolean exists() throws Exception {
         if (this.tableName == null || this.tableName.isEmpty()) {
@@ -251,7 +252,9 @@ public abstract class DatabaseTable {
 
     /**
      * Check if a document exists in the table.
+     * @param primaryKey the document's primary key.
      * @return {@code true} if a document with specified ID exists in the DB; {@code false} otherwise.
+     * @throws Exception if the database is unreachable.
      */
     public boolean exists(PrimaryKey primaryKey) throws Exception {
         boolean exists = false;

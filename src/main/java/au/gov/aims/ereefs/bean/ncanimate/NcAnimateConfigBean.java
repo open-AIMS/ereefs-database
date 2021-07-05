@@ -144,7 +144,7 @@ public class NcAnimateConfigBean extends AbstractNcAnimateBean {
      * <ul>
      *   <li><em>version</em>: version of the configuration file. Currently {@code 2.0}</li>
      *   <li><em>enabled</em>: set to {@code false} to tell the {@code ereefs-job-planner}
-     *       to ignore this configuration; {@code true} otherwise.<br/>
+     *       to ignore this configuration; {@code true} otherwise.<br>
      *       NOTE: this property is ignored by NcAnimate.
      *   </li>
      *   <li><em>regions</em>: list of {@link NcAnimateRegionBean}. NcAnimate generates
@@ -166,7 +166,7 @@ public class NcAnimateConfigBean extends AbstractNcAnimateBean {
      *   </li>
      *   <li><em>focusLayers</em>: list of NetCDF layer IDs that should be used
      *       to create the list of products ({@code VIDEO} and {@code MAP})
-     *       that can be generated. If unspecified, all NetCDF layers are considered.<br/>
+     *       that can be generated. If unspecified, all NetCDF layers are considered.<br>
      *
      *       This is used to prevent generating unnecessary products.
      *       For example, if we want to generate a product to show NOAA's data,

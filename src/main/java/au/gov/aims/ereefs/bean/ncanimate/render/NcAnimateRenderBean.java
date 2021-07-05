@@ -306,7 +306,7 @@ public class NcAnimateRenderBean extends AbstractNcAnimateBean {
      * Video frames are saved if and only if this property is set.
      * It's required for the {@code Download current video frame} feature
      * to work.
-     * Supports protocol {@code s3://} and {@code file://}</li>
+     * Supports protocol {@code s3://} and {@code file://}.
      *
      * @return the directory URI where the frames are stored.
      */

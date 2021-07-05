@@ -277,7 +277,9 @@ public class DownloadBean extends AbstractBean {
     }
 
     /**
-     * @deprecated Use getFilenameRegex()
+     * @deprecated Use {@link #getFilenameRegex()}
+     * @return the file filter regular expression if
+     *     a filter property is set; {@code null} otherwise.
      */
     @Deprecated
     public Pattern getFilenameTemplateRegex() {

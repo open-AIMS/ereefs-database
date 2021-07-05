@@ -62,6 +62,7 @@ public class NcAnimateIdBean {
      * Load the attributes of the NcAnimate ID bean part from a {@code JSONWrapperObject}.
      *
      * @param json {@code JSONWrapperObject} representing a NcAnimate ID bean part.
+     * @param idPropertyName name of the property used for the ID in the JSON document.
      * @throws Exception if the json object is malformed.
      */
     protected void parse(JSONWrapperObject json, String idPropertyName) throws Exception {

@@ -32,7 +32,7 @@ import java.util.List;
  *     </li>
  *     <li><em>ZIP</em>: <a href="https://en.wikipedia.org/wiki/ZIP_(file_format)" target="_blank">Archive file format</a>.
  *         NcAnimate can also generate a ZIP archive containing all the video frames,
- *         which can be provided as a downloadable file.<br/>
+ *         which can be provided as a downloadable file.<br>
  *         WARNING: File archive can be surprisingly large. It's recommended to make
  *         each video frame available for download instead. Using JavaScript,
  *         a client can detect which frame is currently displayed and provide a download link

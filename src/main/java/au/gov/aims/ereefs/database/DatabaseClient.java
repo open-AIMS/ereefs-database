@@ -67,15 +67,15 @@ public class DatabaseClient {
      *
      * <p>The parameter are expected to be found in the following path:</p>
      * <ul>
-     *     <li>/<variableStorePrefix>/<appName>/mongodb/userid</li>
-     *     <li>/<variableStorePrefix>/<appName>/mongodb/password</li>
+     *     <li>/[variableStorePrefix]/[appName]/mongodb/userid</li>
+     *     <li>/[variableStorePrefix]/[appName]/mongodb/password</li>
      * </ul>
      *
      * <p>It also used the following global parameters:</p>
      * <ul>
-     *     <li>/<variableStorePrefix>/global/mongodb/host</li>
-     *     <li>/<variableStorePrefix>/global/mongodb/port</li>
-     *     <li>/<variableStorePrefix>/global/mongodb/db</li>
+     *     <li>/[variableStorePrefix]/global/mongodb/host</li>
+     *     <li>/[variableStorePrefix]/global/mongodb/port</li>
+     *     <li>/[variableStorePrefix]/global/mongodb/db</li>
      * </ul>
      *
      * <p>AWS API documentation: <a href="https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/simplesystemsmanagement/AWSSimpleSystemsManagement.html#getParameters-com.amazonaws.services.simplesystemsmanagement.model.GetParametersRequest-" target="_blank">https://docs.aws.amazon.com/AWSJavaSDK/latest/javadoc/com/amazonaws/services/simplesystemsmanagement/AWSSimpleSystemsManagement.html#getParameters-com.amazonaws.services.simplesystemsmanagement.model.GetParametersRequest-</a></p>
@@ -251,14 +251,15 @@ public class DatabaseClient {
      *
      * <p>See {@link #getDbRetryAttempts()}</p>
      *
-     * @param dbRetryAttempts
+     * @param dbRetryAttempts Number of attempts to connect to the database before throwing an exception.
      */
     public void setDbRetryAttempts(int dbRetryAttempts) {
         this.dbRetryAttempts = Math.max(1, dbRetryAttempts);
     }
 
     /**
-     * @deprecated Use getDbInitialDelayBetweenAttempt()
+     * @deprecated Use {@link #getDbInitialDelayBetweenAttempt()}
+     * @return the number of seconds to wait after the first failed connection attempt.
      */
     @Deprecated
     public int getDbDelayBetweenAttempt() {
@@ -266,7 +267,9 @@ public class DatabaseClient {
     }
 
     /**
-     * @deprecated Use setDbInitialDelayBetweenAttempt(int dbDelayBetweenAttempt)
+     * @deprecated Use {@link #setDbInitialDelayBetweenAttempt(int)}
+     * @param dbInitialDelayBetweenAttempt the number of seconds to wait
+     *     after the first failed connection attempt.
      */
     @Deprecated
     public void setDbDelayBetweenAttempt(int dbInitialDelayBetweenAttempt) {
@@ -331,6 +334,7 @@ public class DatabaseClient {
      * <p>Used internally. Use a {@link au.gov.aims.ereefs.database.table.DatabaseTable}
      * object where possible, to take advantage of the caching and automatic reconnection.</p>
      *
+     * @param mongoClient The MongoDB client.
      * @return the {@code MongoDatabase}.
      */
     public MongoDatabase getMongoDatabase(MongoClient mongoClient) {

@@ -79,6 +79,7 @@ public class NcAnimateOutputFileMetadataBean extends AbstractBean {
      * Construct a {@code NcAnimateOutputFileMetadataBean} from a {@code JSONObject} object.
      * Used when parsing the metadata JSON document retrieved from the database.
      * @param json JSON serialised NcAnimateOutputFileMetadataBean.
+     * @throws Exception if the json object is malformed.
      */
     public NcAnimateOutputFileMetadataBean(JSONObject json) throws Exception {
         if (json == null) {

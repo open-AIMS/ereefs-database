@@ -271,8 +271,11 @@ public abstract class AbstractNcAnimateBean extends AbstractBean {
      * Use {@link #getNeverVisited()} to get the list of configuration
      * attributes which were never parsed.
      *
-     * @param parentPath
-     * @param neverVisited
+     * @param parentPath path of the parent element. Used for error and warning messages.
+     * @param neverVisited {@code Set} of element that were never visited.
+     *     The {@code Set} should be empty at the beginning of the parsing,
+     *     and contains all the path to the elements that were never visited
+     *     at the end of the parsing.
      */
     public void addAllNeverVisited(String parentPath, Set<String> neverVisited) {
         if (neverVisited != null) {

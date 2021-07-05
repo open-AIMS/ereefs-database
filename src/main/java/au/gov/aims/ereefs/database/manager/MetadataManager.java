@@ -30,7 +30,8 @@ public class MetadataManager extends AbstractSingleKeyManager {
     private static final String STATUS_COLUMN_NAME = "status";
 
     /**
-     * @deprecated Use MetadataManager(DatabaseClient dbClient, CacheStrategy cacheStrategy)
+     * @deprecated Use {@link MetadataManager#(DatabaseClient, CacheStrategy)}
+     * @param dbClient the {@link DatabaseClient} used to query the database.
      */
     @Deprecated
     public MetadataManager(DatabaseClient dbClient) {
