@@ -62,7 +62,7 @@ public class NcAnimateConfigHelper {
     private static Map<String, Map<String, NetCDFMetadataBean>> netCDFAllMetadataMapCache;
 
     /**
-     * @deprecated Use {@link NcAnimateConfigHelper#(DatabaseClient, CacheStrategy)}
+     * @deprecated Use {@link #NcAnimateConfigHelper(DatabaseClient, CacheStrategy)}
      * @param dbClient the {@link DatabaseClient} used to query the database.
      */
     @Deprecated

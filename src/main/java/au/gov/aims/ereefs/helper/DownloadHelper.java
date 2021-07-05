@@ -25,7 +25,7 @@ public class DownloadHelper {
     private DownloadManager downloadManager;
 
     /**
-     * @deprecated Use {@link DownloadHelper#(DatabaseClient, CacheStrategy)}
+     * @deprecated Use {@link #DownloadHelper(DatabaseClient, CacheStrategy)}
      * @param dbClient the {@link DatabaseClient} used to query the database.
      */
     @Deprecated

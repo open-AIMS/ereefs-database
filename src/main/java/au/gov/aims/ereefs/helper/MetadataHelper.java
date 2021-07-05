@@ -37,7 +37,7 @@ public class MetadataHelper {
     private MetadataManager metadataManager;
 
     /**
-     * @deprecated Use {@link MetadataHelper#(DatabaseClient, CacheStrategy)}
+     * @deprecated Use {@link #MetadataHelper(DatabaseClient, CacheStrategy)}
      * @param dbClient the {@link DatabaseClient} used to query the database.
      */
     @Deprecated

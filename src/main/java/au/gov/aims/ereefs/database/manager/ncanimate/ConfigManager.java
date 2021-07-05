@@ -19,7 +19,7 @@ public class ConfigManager extends AbstractSingleKeyManager {
     private static final String TABLE_ID_KEYNAME = "_id";
 
     /**
-     * @deprecated Use {@link ConfigManager#(DatabaseClient, CacheStrategy)}
+     * @deprecated Use {@link #ConfigManager(DatabaseClient, CacheStrategy)}
      * @param dbClient the {@link DatabaseClient} used to query the database.
      */
     @Deprecated

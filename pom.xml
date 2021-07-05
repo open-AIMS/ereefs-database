@@ -14,6 +14,23 @@
         The NetCDF library is NOT compatible with recent versions of Java (such as JDK 11).
         You MUST install the old JDK 1.8 and set your "Project Structure" to use
         the old Java 1.8 otherwise you WON't be able to run tests or compile this project.
+
+        To compile from the command line:
+        1. Temporarily set JAVA_HOME to JDK 1.8
+            $ export JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64/
+
+        2. Verify that JAVA_HOME is set to JDK 1.8
+            $ echo $JAVA_HOME
+            /usr/lib/jvm/java-8-openjdk-amd64/
+
+        3. Verify that Maven is using Java 1.8
+            $ mvn -version
+            ...
+            Java version: 1.8.0_292
+            ...
+
+        4. Compile the project with Maven and Java 1.8
+            $ mvn clean package
     -->
 
     <properties>

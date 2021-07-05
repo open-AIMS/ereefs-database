@@ -23,7 +23,7 @@ public class TaskManager extends AbstractSingleKeyManager {
     private static final String TABLE_ID_HASH_KEYNAME = "_id";
 
     /**
-     * @deprecated Use {@link TaskManager#(DatabaseClient, CacheStrategy)}
+     * @deprecated Use {@link #TaskManager(DatabaseClient, CacheStrategy)}
      * @param dbClient the {@link DatabaseClient} used to query the database.
      */
     @Deprecated

@@ -245,7 +245,7 @@ public abstract class AbstractNcAnimateBean extends AbstractBean {
     /**
      * Returns the NcAnimate bean part datatype.
      *
-     * <p>See: {@link ConfigPartManager.Datatype}.</p>
+     * <p>See: {@link au.gov.aims.ereefs.database.manager.ncanimate.ConfigPartManager.Datatype}.</p>
      *
      * @return the NcAnimate bean part datatype.
      */

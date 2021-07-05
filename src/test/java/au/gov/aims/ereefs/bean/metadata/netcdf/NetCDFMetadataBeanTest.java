@@ -55,6 +55,8 @@ public class NetCDFMetadataBeanTest {
     public void testLoadMetadata() {
         URL netCDFFileUrl = NetCDFMetadataBeanTest.class.getClassLoader().getResource("netcdf/small.nc");
         File netCDFFile = new File(netCDFFileUrl.getFile());
+        Assert.assertTrue("The small.nc file can not be found.", netCDFFile.exists());
+        Assert.assertTrue("The small.nc file is not readable.", netCDFFile.canRead());
 
         String definitionId = "downloads/small";
         String datasetId = "small.nc";

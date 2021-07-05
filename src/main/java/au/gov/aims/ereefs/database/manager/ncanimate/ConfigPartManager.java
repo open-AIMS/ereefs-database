@@ -31,7 +31,7 @@ public class ConfigPartManager extends AbstractCompositeKeyManager {
     private static final String TABLE_SECOND_COMPOSITE_ID_KEYNAME = "id";
 
     /**
-     * @deprecated Use {@link ConfigPartManager#(DatabaseClient, CacheStrategy)}
+     * @deprecated Use {@link #ConfigPartManager(DatabaseClient, CacheStrategy)}
      * @param dbClient the {@link DatabaseClient} used to query the database.
      */
     @Deprecated
