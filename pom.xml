@@ -6,7 +6,7 @@
 
     <groupId>au.gov.aims</groupId>
     <artifactId>ereefs-database</artifactId>
-    <version>0.6.18</version>
+    <version>0.6.19</version>
 
     <!--
         *** IMPORTANT ***
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>au.gov.aims</groupId>
             <artifactId>s3wrapper</artifactId>
-            <version>0.4.0</version>
+            <version>0.4.1</version>
             <!-- AWS is using an old version of Netty which clashes with MongoDB -->
             <exclusions>
                 <exclusion>
@@ -126,6 +126,12 @@
             <artifactId>edal-common_fix-mem-leak</artifactId>
             <version>${edalVersion}</version>
             <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -133,8 +139,11 @@
             <artifactId>edal-graphics</artifactId>
             <version>${edalVersion}</version>
             <type>jar</type>
-            <!-- Prevent loading old libraries - we are using more recent version of those -->
             <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>commons-io</groupId>
                     <artifactId>commons-io</artifactId>
@@ -154,6 +163,10 @@
             <version>${edalVersion}</version>
             <type>jar</type>
             <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
                 <exclusion>
                     <groupId>edu.ucar</groupId>
                     <artifactId>cdm</artifactId>
@@ -207,6 +220,12 @@
             <artifactId>edal-xml-catalogue</artifactId>
             <version>${edalVersion}</version>
             <type>jar</type>
+            <exclusions>
+                <exclusion>
+                    <groupId>log4j</groupId>
+                    <artifactId>log4j</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- ########### -->
@@ -217,9 +236,6 @@
             <artifactId>mongo-java-driver</artifactId>
             <version>3.10.2</version>
         </dependency>
-
-
-
 
         <!-- ############### -->
         <!-- # AWS SSM API # -->
@@ -310,7 +326,6 @@
         <!-- ############## -->
         <!-- # Unit tests # -->
         <!-- ############## -->
-
         <dependency>
             <groupId>junit</groupId>
             <artifactId>junit</artifactId>
@@ -337,6 +352,7 @@
                 It works as expected, it's fast and lightweight and its compatible with the latest version of MongoDB.
                 GitHub: https://github.com/bwaldvogel/mongo-java-server
         -->
+
         <dependency>
             <groupId>de.bwaldvogel</groupId>
             <artifactId>mongo-java-server</artifactId>
