@@ -32,13 +32,22 @@ public abstract class AbstractBean {
      * Utility method used to ensure IDs are suitable for the database.
      * Invalid characters are replaced with underscore {@code _}.
      *
+     * NOTE: IDs should follow path name rules, so they can be used as ID
+     *     in document object. For example, when listing input files
+     *     and their respective MD5 checksum.
+     *
+     * Mongo DB has very little limitations:
+     *     https://docs.mongodb.com/manual/reference/limits/
+     *
+     * The most problematic characters are "." and "$".
+     * This library only allows the following characters,
+     * just to be sure it also plays well with most JSON parsers:
+     *
      * <p>Valid characters:</p>
      * <ul>
      *     <li>alphanumeric character: {@code a-z}, {@code A-Z}, {@code 0-9}</li>
-     *     <li>backslash: {@code \}</li>
-     *     <li>hyphen: {@code -}</li>
-     *     <li>underscore: {@code _}</li>
-     *     <li>slash: {@code /}</li>
+     *     <li>slash and backslash: {@code /}, {@code \}</li>
+     *     <li>hyphen and underscore: {@code -}, {@code _}</li>
      * </ul>
      *
      * @param rawId ID which may contain invalid characters.
