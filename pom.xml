@@ -124,14 +124,8 @@
         <dependency>
             <groupId>uk.ac.rdg.resc</groupId>
             <artifactId>edal-common_fix-mem-leak</artifactId>
-            <version>${edalVersion}</version>
+            <version>1.2.5</version>
             <type>jar</type>
-            <exclusions>
-                <exclusion>
-                    <groupId>log4j</groupId>
-                    <artifactId>log4j</artifactId>
-                </exclusion>
-            </exclusions>
         </dependency>
 
         <dependency>
