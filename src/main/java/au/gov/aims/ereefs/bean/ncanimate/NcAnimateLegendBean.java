@@ -55,6 +55,7 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
 
     private Integer colourBandWidth;
     private Integer colourBandHeight;
+    private Integer colourBandColourCount; // Number of colours used to render the layer and the legend
 
     private Integer majorTickMarkLength;
     private Integer minorTickMarkLength;
@@ -122,6 +123,7 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
 
             this.colourBandWidth = jsonLegend.get(Integer.class, "colourBandWidth");
             this.colourBandHeight = jsonLegend.get(Integer.class, "colourBandHeight");
+            this.colourBandColourCount = jsonLegend.get(Integer.class, "colourBandColourCount");
 
             this.majorTickMarkLength = jsonLegend.get(Integer.class, "majorTickMarkLength");
             this.minorTickMarkLength = jsonLegend.get(Integer.class, "minorTickMarkLength");
@@ -228,6 +230,14 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
     }
 
     /**
+     * Returns the number of colours used to generate the layer and the legend.
+     * @return the number of colours in the colour band.
+     */
+    public Integer getColourBandColourCount() {
+        return this.colourBandColourCount;
+    }
+
+    /**
      * Returns the length of the major tick marks in the legend, in pixels.
      * @return the length of the major tick marks in the legend, in pixels.
      */
@@ -269,6 +279,7 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
 
         json.put("colourBandWidth", this.colourBandWidth);
         json.put("colourBandHeight", this.colourBandHeight);
+        json.put("colourBandColourCount", this.colourBandColourCount);
 
         json.put("majorTickMarkLength", this.majorTickMarkLength);
         json.put("minorTickMarkLength", this.minorTickMarkLength);

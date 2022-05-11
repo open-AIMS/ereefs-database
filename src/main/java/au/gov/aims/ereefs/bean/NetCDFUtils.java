@@ -170,7 +170,7 @@ public class NetCDFUtils {
         long startTime = System.currentTimeMillis(); // For debugging
 
         NetCDFMetadataBean metadata = NetCDFMetadataBean.create(
-                null, null, netCDFFile.toURI(), netCDFFile, netCDFFile.lastModified());
+                null, null, netCDFFile.toURI(), netCDFFile, netCDFFile.lastModified(), false);
 
         Map<String, VariableMetadataBean> variables = metadata.getVariableMetadataBeanMap();
 
