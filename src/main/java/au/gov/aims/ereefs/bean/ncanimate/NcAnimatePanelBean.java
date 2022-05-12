@@ -81,6 +81,9 @@ public class NcAnimatePanelBean extends AbstractNcAnimateBean {
     private Integer width;
     // NOTE: height is calculated in proportion of current region
 
+    // margin is basically outside padding
+    private NcAnimatePaddingBean margin;
+
     private Integer borderWidth;
     private String borderColour;
 
@@ -138,6 +141,7 @@ public class NcAnimatePanelBean extends AbstractNcAnimateBean {
             this.setTitle(jsonPanel.get(JSONWrapperObject.class, "title"));
             this.setLayers(jsonPanel.get(JSONWrapperArray.class, "layers"));
             this.setLayerOverwrites(jsonPanel.get(JSONWrapperObject.class, "layerOverwrites"));
+            this.setMargin(jsonPanel.get(JSONWrapperObject.class, "margin"));
 
             this.mapScale = jsonPanel.get(Integer.class, "mapScale");
             this.description = jsonPanel.get(String.class, "description");
@@ -206,6 +210,14 @@ public class NcAnimatePanelBean extends AbstractNcAnimateBean {
         }
     }
 
+    private void setMargin(JSONWrapperObject jsonMargin) throws Exception {
+        this.margin = null;
+
+        if (jsonMargin != null) {
+            this.margin = new NcAnimatePaddingBean(jsonMargin);
+        }
+    }
+
     /**
      * Returns the panel's {@code Map} of {@link NcAnimateTextBean} to render on or around the panel.
      * @return the panel's {@code Map} of {@link NcAnimateTextBean}.
@@ -265,6 +277,15 @@ public class NcAnimatePanelBean extends AbstractNcAnimateBean {
     }
 
     /**
+     * Returns the {@link NcAnimatePaddingBean} defining the
+     * margin around the panel.
+     * @return the {@link NcAnimatePaddingBean} representing the margin of the panel.
+     */
+    public NcAnimatePaddingBean getMargin() {
+        return this.margin;
+    }
+
+    /**
      * Returns the panel's border width, in pixel.
      * @return the panel's border width.
      */
@@ -311,6 +332,9 @@ public class NcAnimatePanelBean extends AbstractNcAnimateBean {
         // Style
 
         json.put("width", this.width);
+        if (this.margin != null) {
+            json.put("margin", this.margin.toJSON());
+        }
         json.put("borderWidth", this.borderWidth);
         json.put("borderColour", this.borderColour);
         json.put("backgroundColour", this.backgroundColour);
