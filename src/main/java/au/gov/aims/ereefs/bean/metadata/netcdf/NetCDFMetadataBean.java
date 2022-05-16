@@ -72,6 +72,7 @@ public class NetCDFMetadataBean extends AbstractBean {
 
     // Present if the NetCDF file is corrupted
     private String errorMessage;
+    private Exception exception; // Only used for error reporting, not saved in the metadata.
     private List<String> stacktrace;
     private Status status;
 
@@ -201,6 +202,7 @@ public class NetCDFMetadataBean extends AbstractBean {
             metadata.lastModified = lastModified;
             metadata.errorMessage = Utils.getExceptionMessage(ex);
             metadata.status = Status.CORRUPTED;
+            metadata.exception = ex;
             metadata.setStacktrace(ex);
         }
         return metadata;
@@ -597,6 +599,10 @@ public class NetCDFMetadataBean extends AbstractBean {
      */
     public String getErrorMessage() {
         return this.errorMessage;
+    }
+
+    public Exception getException() {
+        return this.exception;
     }
 
     /**
