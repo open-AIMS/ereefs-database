@@ -4,6 +4,7 @@
  */
 package au.gov.aims.ereefs;
 
+import au.gov.aims.ereefs.bean.NetCDFUtils;
 import org.apache.log4j.Logger;
 import ucar.ma2.InvalidRangeException;
 import ucar.nc2.NetcdfFile;
@@ -37,7 +38,11 @@ public class DataScanner {
      * @throws IOException exception which may occur while reading an inaccessible or corrupted NetCDF file.
      * @throws InvalidRangeException exception which may occur while reading a corrupted NetCDF file.
      */
-    public static boolean scan(File netCDFFile) throws IOException, InvalidRangeException {
+    public static boolean scan(File netCDFFile) throws IOException {
+        return scanWithErrorMessage(netCDFFile) == null;
+    }
+
+    public static String scanWithErrorMessage(File netCDFFile) throws IOException {
         LOGGER.info(String.format("Scanning data file: %s", netCDFFile));
 
         try (NetcdfFile ncfile = NetcdfFile.open(netCDFFile.getAbsolutePath());
@@ -50,26 +55,43 @@ public class DataScanner {
                 case NETCDF4:
                     boolean netcdf4magicNumberTest = NetCDF4VariableDataScanner.checkMagicNumber(raf);
                     if (!netcdf4magicNumberTest) {
-                        LOGGER.error(String.format("Invalid NetCDF4 magic number found in file: %s", netCDFFile));
-                        return false;
+                        String errorMessage = String.format("Invalid NetCDF4 magic number found in file: %s", netCDFFile);
+                        LOGGER.error(errorMessage);
+                        return errorMessage;
                     }
 
                     for (Variable variable : ncfile.getVariables()) {
                         if (NetCDF4VariableDataScanner.isNetCDF4Variable(variable)) {
                             LOGGER.info(String.format("Scanning NetCDF4 variable: %s", variable.getFullName()));
 
-                            boolean nc4ScanValid = NetCDF4VariableDataScanner.scanVariable(raf, variable);
+                            String nc4ScanErrorMessage;
+                            try {
+                                nc4ScanErrorMessage = NetCDF4VariableDataScanner.scanVariable(raf, variable);
+                            } catch(InvalidRangeException ex) {
+                                nc4ScanErrorMessage = String.format("NetCDF4 variable %s dimensions described in the file header does not match the actual dimensions in the file: %s",
+                                        variable.getShortName(), netCDFFile);
+                            } catch(IOException ex) {
+                                // Look at the cause chain to see if there is a OutOfMemoryError in there
+                                OutOfMemoryError outOfMemory = NetCDFUtils.getOutOfMemoryErrorCause(ex);
+                                if (outOfMemory != null) {
+                                    throw outOfMemory;
+                                }
+                                nc4ScanErrorMessage = String.format("Error occurred while scanning NetCDF4 variable %s: %s",
+                                        variable.getShortName(), Utils.getExceptionMessage(ex));
+                            }
 
-                            if (!nc4ScanValid) {
-                                return false;
+                            if (nc4ScanErrorMessage != null) {
+                                return nc4ScanErrorMessage;
                             }
 
                         } else {
-                            LOGGER.warn(String.format("Invalid NetCDF4 variable %s class %s",
+                            String errorMessage = String.format("Invalid NetCDF4 variable %s class %s",
                                     variable.getFullName(),
-                                    variable.getSPobject().getClass().getCanonicalName()));
+                                    variable.getSPobject().getClass().getCanonicalName());
 
-                            return false;
+                            LOGGER.warn(errorMessage);
+
+                            return errorMessage;
                         }
                     }
                     break;
@@ -78,8 +100,9 @@ public class DataScanner {
                 case NETCDF3:
                     boolean netcdf3magicNumberTest = NetCDF3VariableDataScanner.checkMagicNumber(raf);
                     if (!netcdf3magicNumberTest) {
-                        LOGGER.error(String.format("Invalid NetCDF3 magic number found in file: %s", netCDFFile));
-                        return false;
+                        String errorMessage = String.format("Invalid NetCDF3 magic number found in file: %s", netCDFFile);
+                        LOGGER.error(errorMessage);
+                        return errorMessage;
                     }
 
 
@@ -87,30 +110,48 @@ public class DataScanner {
                         if (NetCDF3VariableDataScanner.isNetCDF3Variable(variable)) {
                             LOGGER.info(String.format("Scanning NetCDF3 variable: %s", variable.getFullName()));
 
-                            boolean nc3ScanValid = NetCDF3VariableDataScanner.scanVariable(raf, variable);
+                            String nc3ScanErrorMessage;
+                            try {
+                                nc3ScanErrorMessage = NetCDF3VariableDataScanner.scanVariable(raf, variable);
+                            } catch(InvalidRangeException ex) {
+                                nc3ScanErrorMessage = String.format("NetCDF3 variable %s dimensions described in the file header does not match the actual dimensions in the file: %s",
+                                        variable.getShortName(), netCDFFile);
+                            } catch(IOException ex) {
+                                // Look at the cause chain to see if there is a OutOfMemoryError in there
+                                OutOfMemoryError outOfMemory = NetCDFUtils.getOutOfMemoryErrorCause(ex);
+                                if (outOfMemory != null) {
+                                    throw outOfMemory;
+                                }
+                                nc3ScanErrorMessage = String.format("Error occurred while scanning NetCDF3 variable %s: %s",
+                                        variable.getShortName(), Utils.getExceptionMessage(ex));
+                            }
 
-                            if (!nc3ScanValid) {
-                                return false;
+                            if (nc3ScanErrorMessage != null) {
+                                return nc3ScanErrorMessage;
                             }
 
                         } else {
-                            LOGGER.warn(String.format("Invalid NetCDF3 variable %s class %s",
+                            String errorMessage = String.format("Invalid NetCDF3 variable %s class %s",
                                     variable.getFullName(),
-                                    variable.getSPobject().getClass().getCanonicalName()));
+                                    variable.getSPobject().getClass().getCanonicalName());
 
-                            return false;
+                            LOGGER.warn(errorMessage);
+
+                            return errorMessage;
                         }
                     }
                     break;
 
 
                 default:
-                    LOGGER.error(String.format("Unsupported NetCDF file format: %s", netCDFFile));
-                    return false;
+                    String errorMessage = String.format("Unsupported NetCDF file format: %s", netCDFFile);
+
+                    LOGGER.error(errorMessage);
+                    return errorMessage;
             }
         }
 
-        return true;
+        return null;
     }
 
     /**

@@ -69,10 +69,19 @@ public class NetCDFUtils {
      * @throws IOException if the file variable dimensions are inconsistent or if the system runs out of memory.
      */
     public static boolean scan(File netCDFFile) throws IOException {
+        return scanWithErrorMessage(netCDFFile) == null;
+    }
+
+    /**
+     * Scan a NetCDF file for corrupted data.
+     *
+     * @param netCDFFile The file to scan.
+     * @return Error message if corrupted data is found; null if the variable pass the validation test.
+     * @throws IOException if the file variable dimensions are inconsistent or if the system runs out of memory.
+     */
+    public static String scanWithErrorMessage(File netCDFFile) throws IOException {
         try {
-            return DataScanner.scan(netCDFFile);
-        } catch(InvalidRangeException rangeEx) {
-            throw new IOException(String.format("Variable dimensions described in the file header does not match the actual dimensions in the file: %s", netCDFFile), rangeEx);
+            return DataScanner.scanWithErrorMessage(netCDFFile);
         } catch(IOException ex) {
             // Look at the cause chain to see if there is a OutOfMemoryError in there
             OutOfMemoryError outOfMemory = getOutOfMemoryErrorCause(ex);

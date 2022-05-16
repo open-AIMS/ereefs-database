@@ -75,13 +75,13 @@ public class NetCDF3VariableDataScanner {
      *     NOTE: This attribute is ignored. It was added to the method definition to be consistent with
      *     {@link ucar.nc2.iosp.hdf5.NetCDF4VariableDataScanner#scanVariable(RandomAccessFile, Variable)}.
      * @param variable the variable to scan.
-     * @return {@code true} if the variable pass the validation test; {@code false} if corrupted data if found.
+     * @return Error message if corrupted data is found; null if the variable pass the validation test.
      * @throws IOException exception which may occur while reading an inaccessible or corrupted NetCDF file.
      * @throws InvalidRangeException exception which may occur while reading a corrupted NetCDF file.
      */
-    public static boolean scanVariable(RandomAccessFile raf, Variable variable) throws IOException, InvalidRangeException {
+    public static String scanVariable(RandomAccessFile raf, Variable variable) throws IOException, InvalidRangeException {
         if (!NetCDF3VariableDataScanner.isNetCDF3Variable(variable)) {
-            return false;
+            return String.format("Variable %s is not a NetCDF3 variable.", variable.getShortName());
         }
 
         // Inspired from
@@ -121,6 +121,6 @@ public class NetCDF3VariableDataScanner {
 
 
         // If it gets there without throwing exception, it's a valid NetCDF3 file
-        return true;
+        return null;
     }
 }

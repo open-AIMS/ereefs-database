@@ -67,13 +67,13 @@ public class NetCDF4VariableDataScanner {
      *
      * @param raf the {@link RandomAccessFile} for the NetCDF file containing the data for variable to scan.
      * @param variable the variable to scan.
-     * @return {@code true} if the variable pass the validation test; {@code false} if corrupted data if found.
+     * @return Error message if corrupted data is found; null if the variable pass the validation test.
      * @throws IOException exception which may occur while reading an inaccessible or corrupted NetCDF file.
      * @throws InvalidRangeException exception which may occur while reading a corrupted NetCDF file.
      */
-    public static boolean scanVariable(RandomAccessFile raf, Variable variable) throws IOException, InvalidRangeException {
+    public static String scanVariable(RandomAccessFile raf, Variable variable) throws IOException, InvalidRangeException {
         if (!NetCDF4VariableDataScanner.isNetCDF4Variable(variable)) {
-            return false;
+            return String.format("Variable %s is not a NetCDF4 variable.", variable.getShortName());
         }
 
         Object spObject = variable.getSPobject();
@@ -100,6 +100,6 @@ public class NetCDF4VariableDataScanner {
         }
 
         // If it gets there without throwing exception, it's a valid NetCDF4 file
-        return true;
+        return null;
     }
 }
