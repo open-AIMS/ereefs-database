@@ -48,6 +48,12 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
     private NcAnimateTextBean title; // Position of the legendTitle itself and spec for the legendTitle title
     private NcAnimateTextBean label; // Labels in the legend
     private Integer steps; // Number of labels to display in the legend
+    private Integer labelPrecision; // Number of digit to display
+
+    // Used to convert to a different unit.
+    private Float labelMultiplier;
+    private Float labelOffset;
+
     private NcAnimatePositionBean position;
     private NcAnimatePaddingBean padding;
 
@@ -116,6 +122,10 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
             this.setTitle(jsonLegend.get(JSONWrapperObject.class, "title"));
             this.setLabel(jsonLegend.get(JSONWrapperObject.class, "label"));
             this.steps = jsonLegend.get(Integer.class, "steps");
+            this.labelPrecision = jsonLegend.get(Integer.class, "labelPrecision");
+            this.labelMultiplier = jsonLegend.get(Float.class, "labelMultiplier");
+            this.labelOffset = jsonLegend.get(Float.class, "labelOffset");
+
             this.setPosition(jsonLegend.get(JSONWrapperObject.class, "position"));
             this.setPadding(jsonLegend.get(JSONWrapperObject.class, "padding"));
 
@@ -185,6 +195,32 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
      */
     public Integer getSteps() {
         return this.steps;
+    }
+
+    /**
+     * Returns the number of digits to display for the numbers in the legend.
+     * @return the number of digits to display.
+     */
+    public Integer getLabelPrecision() {
+        return this.labelPrecision;
+    }
+
+    /**
+     * Each values in the legend are multiplied by this number.
+     * Can be used to convert units, or generate prettier legend with small values or large values.
+     * @return the label multiplier.
+     */
+    public Float getLabelMultiplier() {
+        return this.labelMultiplier;
+    }
+
+    /**
+     * Each values in the legend are offset by this number. Can be used to convert units.
+     * Note that `labelMultiplier` is applied before `labelOffset`.
+     * @return the label offset.
+     */
+    public Float getLabelOffset() {
+        return this.labelOffset;
     }
 
     /**
@@ -268,6 +304,9 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
         }
 
         json.put("steps", this.steps);
+        json.put("labelPrecision", this.labelPrecision);
+        json.put("labelMultiplier", this.labelMultiplier);
+        json.put("labelOffset", this.labelOffset);
 
         if (this.position != null) {
             json.put("position", this.position.toJSON());
