@@ -54,6 +54,11 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
     private Float labelMultiplier;
     private Float labelOffset;
 
+    // Sometimes, the lower or higher label in the legend makes no sense.
+    // It's better to not display it.
+    private Boolean hideLowerLabel;
+    private Boolean hideHigherLabel;
+
     private NcAnimatePositionBean position;
     private NcAnimatePaddingBean padding;
 
@@ -125,6 +130,9 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
             this.labelPrecision = jsonLegend.get(Integer.class, "labelPrecision");
             this.labelMultiplier = jsonLegend.get(Float.class, "labelMultiplier");
             this.labelOffset = jsonLegend.get(Float.class, "labelOffset");
+
+            this.hideLowerLabel = jsonLegend.get(Boolean.class, "hideLowerLabel");
+            this.hideHigherLabel = jsonLegend.get(Boolean.class, "hideHigherLabel");
 
             this.setPosition(jsonLegend.get(JSONWrapperObject.class, "position"));
             this.setPadding(jsonLegend.get(JSONWrapperObject.class, "padding"));
@@ -224,6 +232,22 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
     }
 
     /**
+     * Prevent the rendering of the lower number in the legend.
+     * @return True or False, or null is unset.
+     */
+    public Boolean getHideLowerLabel() {
+        return this.hideLowerLabel;
+    }
+
+    /**
+     * Prevent the rendering of the higher number in the legend.
+     * @return True or False, or null is unset.
+     */
+    public Boolean getHideHigherLabel() {
+        return this.hideHigherLabel;
+    }
+
+    /**
      * Returns the {@link NcAnimatePositionBean} defining the
      * position of the legend in relation of the panel it is in.
      * @return the {@link NcAnimatePositionBean} of the legend.
@@ -307,6 +331,9 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
         json.put("labelPrecision", this.labelPrecision);
         json.put("labelMultiplier", this.labelMultiplier);
         json.put("labelOffset", this.labelOffset);
+
+        json.put("hideLowerLabel", this.hideLowerLabel);
+        json.put("hideHigherLabel", this.hideHigherLabel);
 
         if (this.position != null) {
             json.put("position", this.position.toJSON());
