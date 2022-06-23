@@ -42,7 +42,7 @@ public class NcAnimateInputBean extends AbstractNcAnimateBean {
     // Period of time covered by each frame of the file
     private TimeIncrement timeIncrement;
 
-    private String licence; // Example: "CC-BY 4.0 Aust"
+    private String licence; // Example: "CC-BY 4.0"
     private List<String> authors; // Example: "eReefs CSIRO GBR4 Hydrodynamic Model v2.0"
 
     /**

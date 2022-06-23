@@ -323,7 +323,7 @@ public class NcAnimateConfigHelperTest extends ConfigManagerTestBase {
         Assert.assertNotNull("Panel temp layer 0 input authors is null", tempPanelLayer0InputAuthors);
         Assert.assertEquals("Panel temp layer 0 input authors count is wrong", 1, tempPanelLayer0InputAuthors.size());
         Assert.assertEquals("Wrong temp layer 0 input author 0", "eReefs CSIRO GBR4 Hydrodynamic Model v2.0", tempPanelLayer0InputAuthors.get(0));
-        Assert.assertEquals("Wrong temp layer 0 input licence", "CC-BY 4.0 Aust", tempPanelLayer0Input.getLicence());
+        Assert.assertEquals("Wrong temp layer 0 input licence", "CC-BY 4.0", tempPanelLayer0Input.getLicence());
         Assert.assertEquals("Wrong temp layer 0 input frame time increment unit", TimeIncrementUnit.HOUR, tempPanelLayer0Input.getTimeIncrement().getUnit());
         NcAnimateNetCDFVariableBean tempPanelLayer0Variable = tempPanelLayer0.getVariable();
         Assert.assertNotNull("Panel temp layer 0 variable is null", tempPanelLayer0Variable);
@@ -409,7 +409,7 @@ public class NcAnimateConfigHelperTest extends ConfigManagerTestBase {
         Assert.assertNotNull("Panel wind layer 0 input authors is null", windPanelLayer0InputAuthors);
         Assert.assertEquals("Panel wind layer 0 input authors count is wrong", 1, windPanelLayer0InputAuthors.size());
         Assert.assertEquals("Wrong wind layer 0 input author 0", "eReefs CSIRO GBR4 Hydrodynamic Model v2.0", windPanelLayer0InputAuthors.get(0));
-        Assert.assertEquals("Wrong wind layer 0 input licence", "CC-BY 4.0 Aust", windPanelLayer0Input.getLicence());
+        Assert.assertEquals("Wrong wind layer 0 input licence", "CC-BY 4.0", windPanelLayer0Input.getLicence());
         Assert.assertEquals("Wrong wind layer 0 input frame time increment unit", TimeIncrementUnit.HOUR, windPanelLayer0Input.getTimeIncrement().getUnit());
         NcAnimateNetCDFVariableBean windPanelLayer0Variable = windPanelLayer0.getVariable();
         Assert.assertNotNull("Panel wind layer 0 variable is null", windPanelLayer0Variable);
@@ -486,7 +486,7 @@ public class NcAnimateConfigHelperTest extends ConfigManagerTestBase {
         Assert.assertNotNull("Panel salt layer 2 input authors is null", saltPanelLayer2InputAuthors);
         Assert.assertEquals("Panel salt layer 2 input authors count is wrong", 1, saltPanelLayer2InputAuthors.size());
         Assert.assertEquals("Wrong salt layer 2 input author 0", "eReefs CSIRO GBR4 Hydrodynamic Model v2.0", saltPanelLayer2InputAuthors.get(0));
-        Assert.assertEquals("Wrong salt layer 2 input licence", "CC-BY 4.0 Aust", saltPanelLayer2Input.getLicence());
+        Assert.assertEquals("Wrong salt layer 2 input licence", "CC-BY 4.0", saltPanelLayer2Input.getLicence());
         Assert.assertEquals("Wrong salt layer 2 input frame time increment unit", TimeIncrementUnit.HOUR, saltPanelLayer2Input.getTimeIncrement().getUnit());
         NcAnimateNetCDFVariableBean saltPanelLayer2Variable = saltPanelLayer2.getVariable();
         Assert.assertNotNull("Panel salt layer 2 variable is null", saltPanelLayer2Variable);
