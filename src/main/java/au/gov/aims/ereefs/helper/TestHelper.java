@@ -141,7 +141,7 @@ public class TestHelper {
         }
     }
 
-    private static JSONObject parseJSONStream(InputStream configInputStream, Map<String, String> substitutions) throws IOException {
+    public static JSONObject parseJSONStream(InputStream configInputStream, Map<String, String> substitutions) throws IOException {
         String configString = JSONUtils.streamToString(configInputStream, true);
 
         if (substitutions != null) {
