@@ -5,8 +5,12 @@
 package au.gov.aims.ereefs.bean.ncanimate;
 
 import au.gov.aims.ereefs.database.manager.ncanimate.ConfigPartManager;
+import au.gov.aims.json.JSONWrapperArray;
 import au.gov.aims.json.JSONWrapperObject;
+import org.json.JSONArray;
 import org.json.JSONObject;
+
+import java.util.ArrayList;
 
 /**
  * NcAnimate {@code NetCDF} variable bean part.
@@ -15,7 +19,7 @@ import org.json.JSONObject;
  *
  * <p>Used to define NetCDF variables.</p>
  *
- * <p>Example:</p>
+ * <p>Examples:</p>
  * <pre class="code">
  * {
  *     "variableId": "salt",
@@ -23,17 +27,38 @@ import org.json.JSONObject;
  *         "title": { "text": "Salinity (PSU)" }
  *     },
  *     "colourPaletteName": "RedBlueRainbowSalt_24-36-PSU",
+ *     "colourSchemeType": "scale"
  *     "scaleMin": 24,
  *     "scaleMax": 36
  * }</pre>
+ * <pre class="code">
+ * {
+ *     "variableId": "nom",
+ *     "legend": {
+ *         "title": { "text": "Normanby river" }
+ *     },
+ *     "colourPaletteName": "transparentGreen",
+ *     "colourSchemeType": "thresholds"
+ *     "thresholds": [0.1, 0.5, 0.8]
+ * }</pre>
  */
 public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
+    
+    public enum ColourSchemeType {
+        SCALE(),
+        THRESHOLDS()
+    }
+    
     private String variableId;
     private String colourPaletteName;
     private Boolean logarithmic;
+    
+    private ColourSchemeType colourSchemeType;
 
     private Float scaleMin;
     private Float scaleMax;
+    
+    private ArrayList<Float> thresholds;
 
     // Used with direction variable
 
@@ -72,8 +97,10 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
      * <ul>
      *   <li><em>variableId</em>: the ID of the variable, as defined in the NetCDF file.</li>
      *   <li><em>colourPaletteName</em>: the name of colour palette to use to render the data.</li>
+     *   <li><em>colourSchemeType</em>: the type of the colour scheme. Possible values: 'thresholds' and 'scale'.</li>
      *   <li><em>scaleMax</em>: expected maximum value in the data.</li>
      *   <li><em>scaleMin</em>: expected minimum value in the data.</li>
+     *   <li><em>thresholds</em>: threshold values as float array.</li>
      *   <li><em>legend</em>: legend bean ID or serialised {@link NcAnimateLegendBean}.</li>
      *   <li><em>logarithmic</em>: {@code true} to render the data using a logarithmic scale. Experimental.</li>
      * </ul>
@@ -124,9 +151,14 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
         if (jsonVariable != null) {
             this.variableId = jsonVariable.get(String.class, "variableId");
             this.colourPaletteName = jsonVariable.get(String.class, "colourPaletteName");
+            
+            this.setColourSchemeType(jsonVariable.get(String.class, "colourSchemeType"));
+            
             this.scaleMax = jsonVariable.get(Float.class, "scaleMax");
             this.scaleMin = jsonVariable.get(Float.class, "scaleMin");
 
+            this.setThresholds(jsonVariable.get(JSONWrapperArray.class, "thresholds"));
+            
             this.northAngle = jsonVariable.get(Float.class, "northAngle");
             this.directionTurns = jsonVariable.get(Float.class, "directionTurns");
 
@@ -153,6 +185,31 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
     }
 
     /**
+     * Set the colour scheme type to either THRESHOLDS or SCALE.
+     * @param typeString The string representing the colour scheme type (case-insensitive).
+     */
+    public void setColourSchemeType(String typeString) {
+        this.colourSchemeType = null;
+        
+        if (typeString != null) {
+            if (typeString.equalsIgnoreCase(ColourSchemeType.THRESHOLDS.toString())) {
+                this.colourSchemeType = ColourSchemeType.THRESHOLDS;
+            }
+            else if (typeString.equalsIgnoreCase(ColourSchemeType.SCALE.toString())) {
+                this.colourSchemeType = ColourSchemeType.SCALE;
+            }
+        }
+    }
+
+    /**
+     * Return the colour scheme type.
+     * @return The colour scheme type.
+     */
+    public ColourSchemeType getColourSchemeType() {
+        return this.colourSchemeType;
+    }
+
+    /**
      * Returns the colour palette name to use to render the data.
      * @return the colour palette name.
      */
@@ -174,6 +231,32 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
      */
     public Float getScaleMin() {
         return this.scaleMin;
+    }
+
+    /**
+     * Set the thresholds array
+     * @param thresholdsWrapperArray The threshold values
+     * @throws Exception
+     */
+    public void setThresholds(JSONWrapperArray thresholdsWrapperArray) throws Exception {
+        this.thresholds = null;
+
+        if (thresholdsWrapperArray != null && thresholdsWrapperArray.length() > 0) {
+            this.thresholds = new ArrayList<>();
+
+            for (int i = 0; i < thresholdsWrapperArray.length(); i++) {
+                this.thresholds.add(thresholdsWrapperArray.get(Float.class, i));
+            }
+        }
+    }
+
+    /**
+     * Returns the list of thresholds.
+     *
+     * @return the list of threshold values.
+     */
+    public ArrayList<Float> getThresholds() {
+        return this.thresholds;
     }
 
     /**
@@ -233,8 +316,15 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
         json.put("variableId", this.variableId);
 
         json.put("colourPaletteName", this.colourPaletteName);
+
+        json.put("colourSchemeType", this.colourSchemeType);
+        
         json.put("scaleMax", this.scaleMax);
         json.put("scaleMin", this.scaleMin);
+
+        if (this.thresholds != null && !this.thresholds.isEmpty()) {
+            json.put("thresholds", new JSONArray(this.thresholds));
+        }
 
         json.put("northAngle", this.northAngle);
         json.put("directionTurns", this.directionTurns);

@@ -1,0 +1,84 @@
+{
+    "_id": "gbr4_v2_rivers",
+    "version": "2.0",
+    "lastModified": "2022-06-17T11:00:00.000+08:00",
+    "enabled": true,
+
+    "regions": [
+        "queensland-1"
+    ],
+
+    "targetHeights": [-2.35],
+
+    "canvas": {
+        "id": "default-canvas",
+        "texts": {
+            "frameDate": {
+                "text": "${ctx.frameDateFrom dd-MMM-yyyy}"
+            }
+        }
+    },
+
+    "defaults": {
+        "panel": {
+            "id": "default-panel",
+            "layers": [
+                "ereefs-model_gbr4_v2_rivers",
+                "world",
+                "australia",
+                "rivers"
+            ]
+        },
+        "legend": "bottom-left-legend"
+    },
+
+    "panels": [
+        {
+            "id": "rivers-1",
+            "title": {
+                "text": "% River water in sea water @ ${ctx.targetHeight %.1f}m",
+                "fontSize": 22
+            },
+            "margin": {
+                "right": 120
+            },
+            "backgroundColour": "#FFFFFF",
+            "layers": [
+                {
+                    "id": "ereefs-model_gbr4_v2_rivers_nom_lat-14.40",
+                    "input": "ereefs__gbr4_v2__river_tracing__raw",
+                    "type": "NETCDF",
+                    "targetHeight": "${ctx.targetHeight}",
+                    "variable": {
+                        "id": "ereefs/gbr4_v2/river",
+                        "variableId": "nom",
+                        "colourPaletteName": "transparentPink",
+                        "legend": {
+                            "position": { "top": 5, "left": 457 },
+                            "title": { "text": "Normanby" }
+                        }
+                    }
+                },
+                {
+                    "id": "ereefs-model_gbr4_v2_rivers_dai_lat-16.30",
+                    "input": "ereefs__gbr4_v2__river_tracing__raw",
+                    "type": "NETCDF",
+                    "targetHeight": "${ctx.targetHeight}",
+                    "variable": {
+                        "id": "ereefs/gbr4_v2/river",
+                        "variableId": "dai",
+                        "colourPaletteName": "transparentGreen",
+                        "legend": {
+                            "position": { "top": 115, "left": 457 },
+                            "title": { "text": "Daintree" }
+                        }
+                    }
+                }
+            ]
+        }
+    ],
+
+    "render": {
+        "id": "default-render"
+    }
+}

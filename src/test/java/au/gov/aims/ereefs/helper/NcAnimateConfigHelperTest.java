@@ -61,6 +61,35 @@ public class NcAnimateConfigHelperTest extends ConfigManagerTestBase {
         Set<String> neverVisited = config.getNeverVisited();
         Assert.assertTrue(String.format("NcAnimate config was not parse properly. The following config were not parsed:%n%s", neverVisited),
                 neverVisited == null || neverVisited.isEmpty());
+
+        NcAnimateNetCDFVariableBean tempVariable = config.getPanels().get(0).getLayers().get(0).getVariable();
+        Assert.assertNull("Wrong default colour scheme type", tempVariable.getColourSchemeType());
+
+        NcAnimateNetCDFVariableBean saltVariable = config.getPanels().get(2).getLayers().get(2).getVariable();
+        Assert.assertEquals("Wrong colour scheme type",
+                NcAnimateNetCDFVariableBean.ColourSchemeType.SCALE,
+                saltVariable.getColourSchemeType());
+    }
+
+    @Test
+    public void testSelectRiversConfig() throws Exception {
+        super.insertDummyData();
+        NcAnimateConfigHelper configHelper = new NcAnimateConfigHelper(this.getDatabaseClient(), CACHE_STRATEGY);
+        NcAnimateConfigBean config = configHelper.getNcAnimateConfig("gbr4_v2_rivers");
+
+        // Check if all element of the config is used
+        Set<String> neverVisited = config.getNeverVisited();
+        Assert.assertTrue(String.format("NcAnimate config was not parse properly. The following config were not parsed:%n%s", neverVisited),
+                neverVisited == null || neverVisited.isEmpty());
+
+        NcAnimateNetCDFVariableBean variable = config.getPanels().get(0).getLayers().get(0).getVariable();
+
+        Assert.assertEquals("Wrong colour scheme type",
+                NcAnimateNetCDFVariableBean.ColourSchemeType.THRESHOLDS,
+                variable.getColourSchemeType());
+        Assert.assertEquals("Wrong list of thresholds",
+                new ArrayList<>(Arrays.asList(1.0f, 3.0f, 10.0f, 25.0f, 40.0f)),
+                variable.getThresholds());
     }
 
     @Test
