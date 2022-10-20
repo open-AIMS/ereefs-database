@@ -85,6 +85,7 @@
                     "targetHeight": "${ctx.targetHeight}",
                     "variable": {
                         "id": "ereefs/gbr4_v2/salt",
+                        "colourSchemeType": "scale",
                         "scaleMin": 2,
                         "scaleMax": 100
                     }

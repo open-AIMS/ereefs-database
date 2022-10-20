@@ -1,0 +1,23 @@
+{
+    "_id": {
+        "id": "ereefs/gbr4_v2/river",
+        "datatype": "VARIABLE"
+    },
+    "lastModified": "2022-06-17T11:00:00.000+08:00",
+
+    "variableId": "bur",
+    "legend": {
+        "title": { "text": "River to Sea water percentage" },
+        "steps": 6,
+        "colourBandColourCount": 5,
+        "labelPrecision": 1,
+        "labelMultiplier": 100,
+        "minorTickMarkLength": 0,
+        "colourBandHeight": 100,
+        "hideLowerLabel": true,
+        "hideHigherLabel": true
+    },
+    "colourPaletteName": "transparentGreen",
+    "colourSchemeType": "thresholds",
+    "thresholds": [1.0, 3.0, 10.0, 25.0, 40.0]
+}

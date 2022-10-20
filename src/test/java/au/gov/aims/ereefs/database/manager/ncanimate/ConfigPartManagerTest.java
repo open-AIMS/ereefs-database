@@ -20,7 +20,7 @@ public class ConfigPartManagerTest extends ConfigManagerTestBase {
 
     @Test
     public void testSelectAll() throws Exception {
-        int expectedLayerCount = 5;
+        int expectedLayerCount = 6;
         int expectedCanvasCount = 1;
         int expectedBBoxCount = 0;
 
