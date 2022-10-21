@@ -36,7 +36,6 @@ public class DataScanner {
      * @param netCDFFile the NetCDF file to scan.
      * @return {@code true} of the file is valid; {@code false} otherwise.
      * @throws IOException exception which may occur while reading an inaccessible or corrupted NetCDF file.
-     * @throws InvalidRangeException exception which may occur while reading a corrupted NetCDF file.
      */
     public static boolean scan(File netCDFFile) throws IOException {
         return scanWithErrorMessage(netCDFFile) == null;

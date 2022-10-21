@@ -236,7 +236,7 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
     /**
      * Set the thresholds array
      * @param thresholdsWrapperArray The threshold values
-     * @throws Exception
+     * @throws Exception if the thresholdsWrapperArray does not contain valid data
      */
     public void setThresholds(JSONWrapperArray thresholdsWrapperArray) throws Exception {
         this.thresholds = null;

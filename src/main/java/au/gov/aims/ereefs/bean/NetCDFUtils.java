@@ -347,6 +347,7 @@ public class NetCDFUtils {
          * This was an attempt at generating clean
          * NetCDF legend, but the approach turned out
          * to be to simple to solve the problem.
+         * @return the adjusted max
          * @deprecated
          */
         @Deprecated

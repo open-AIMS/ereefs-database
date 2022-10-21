@@ -46,7 +46,7 @@ public class DatabaseCompositeKeyTable extends DatabaseTable {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public CompositePrimaryKey getPrimaryKey(JSONObject json) {
