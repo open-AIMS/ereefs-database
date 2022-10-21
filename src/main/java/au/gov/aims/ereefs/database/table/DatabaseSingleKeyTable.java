@@ -30,7 +30,7 @@ public class DatabaseSingleKeyTable extends DatabaseTable {
     }
 
     /**
-     * @inheritDoc
+     * {@inheritDoc}
      */
     @Override
     public SinglePrimaryKey getPrimaryKey(JSONObject json) {
