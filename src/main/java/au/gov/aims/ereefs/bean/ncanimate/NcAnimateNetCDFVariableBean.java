@@ -10,7 +10,9 @@ import au.gov.aims.json.JSONWrapperObject;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.InvalidClassException;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * NcAnimate {@code NetCDF} variable bean part.
@@ -43,21 +45,22 @@ import java.util.ArrayList;
  * }</pre>
  */
 public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
-    
+
     public enum ColourSchemeType {
-        SCALE(),
-        THRESHOLDS()
+        SCALE,
+        THRESHOLDS,
+        ARROW_THRESHOLDS,
     }
-    
+
     private String variableId;
     private String colourPaletteName;
     private Boolean logarithmic;
-    
+
     private ColourSchemeType colourSchemeType;
 
     private Float scaleMin;
     private Float scaleMax;
-    
+
     private ArrayList<Float> thresholds;
 
     // Used with direction variable
@@ -73,7 +76,7 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
     // For radian:
     //     directionTurns = 6.2831853 // 2*PI
     // See: https://en.wikipedia.org/wiki/Angular_unit
-    // NOTE: For counter clockwise angle, use a negative directionTurns
+    // NOTE: For counter-clockwise angle, use a negative directionTurns
     //     directionTurns = 360:
     //         North: 0
     //         East: 90
@@ -89,6 +92,15 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
 
     // Legend
     private NcAnimateLegendBean legend;
+
+    private String arrowColour;
+
+    // Arrow thresholds.
+    // Each value is formatted this way:
+    //   Threshold value:Hex colour
+    // Example:
+    //   "8.1:#009900"
+    private List<String> arrowThresholds;
 
     /**
      * Create a NcAnimate NetCDF layer variable bean part from a {@code JSONWrapperObject}.
@@ -151,20 +163,31 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
         if (jsonVariable != null) {
             this.variableId = jsonVariable.get(String.class, "variableId");
             this.colourPaletteName = jsonVariable.get(String.class, "colourPaletteName");
-            
+
             this.setColourSchemeType(jsonVariable.get(String.class, "colourSchemeType"));
-            
+
             this.scaleMax = jsonVariable.get(Float.class, "scaleMax");
             this.scaleMin = jsonVariable.get(Float.class, "scaleMin");
 
             this.setThresholds(jsonVariable.get(JSONWrapperArray.class, "thresholds"));
-            
+
             this.northAngle = jsonVariable.get(Float.class, "northAngle");
             this.directionTurns = jsonVariable.get(Float.class, "directionTurns");
 
             this.logarithmic = jsonVariable.get(Boolean.class, "logarithmic");
 
             this.setLegend(jsonVariable.get(JSONWrapperObject.class, "legend"));
+
+            this.arrowColour = jsonVariable.get(String.class, "arrowColour");
+
+            this.arrowThresholds = null;
+            Class arrowThresholdsClass = jsonVariable.getClass("arrowThresholds");
+            if (arrowThresholdsClass != null) {
+                if (JSONWrapperArray.class.equals(arrowThresholdsClass)) {
+                    this.setArrowThresholds(
+                        jsonVariable.get(JSONWrapperArray.class, "arrowThresholds"));
+                }
+            }
         }
     }
 
@@ -173,6 +196,17 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
 
         if (jsonLegend != null) {
             this.legend = new NcAnimateLegendBean(jsonLegend);
+        }
+    }
+
+    private void setArrowThresholds(JSONWrapperArray jsonArrowThresholds) throws InvalidClassException {
+        this.arrowThresholds = null;
+
+        if (jsonArrowThresholds != null) {
+            this.arrowThresholds = new ArrayList<String>();
+            for (int i=0; i<jsonArrowThresholds.length(); i++) {
+                this.arrowThresholds.add(jsonArrowThresholds.get(String.class, i));
+            }
         }
     }
 
@@ -190,10 +224,13 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
      */
     public void setColourSchemeType(String typeString) {
         this.colourSchemeType = null;
-        
+
         if (typeString != null) {
             if (typeString.equalsIgnoreCase(ColourSchemeType.THRESHOLDS.toString())) {
                 this.colourSchemeType = ColourSchemeType.THRESHOLDS;
+            }
+            else if (typeString.equalsIgnoreCase(ColourSchemeType.ARROW_THRESHOLDS.toString())) {
+                this.colourSchemeType = ColourSchemeType.ARROW_THRESHOLDS;
             }
             else if (typeString.equalsIgnoreCase(ColourSchemeType.SCALE.toString())) {
                 this.colourSchemeType = ColourSchemeType.SCALE;
@@ -242,7 +279,7 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
         this.thresholds = null;
 
         if (thresholdsWrapperArray != null && thresholdsWrapperArray.length() > 0) {
-            this.thresholds = new ArrayList<>();
+            this.thresholds = new ArrayList<Float>();
 
             for (int i = 0; i < thresholdsWrapperArray.length(); i++) {
                 this.thresholds.add(thresholdsWrapperArray.get(Float.class, i));
@@ -304,6 +341,23 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
         this.legend = legend;
     }
 
+    /**
+     * Returns the colour of the arrows, in hexadecimal format.
+     * @return the colour of the arrows.
+     */
+    public String getArrowColour() {
+        return this.arrowColour;
+    }
+
+    /**
+     * Returns the list of arrow threshold colours.
+     * Used with {@link NcAnimateLayerBean.LayerType#NETCDF} and {@link NcAnimateLayerBean.LayerType#GRIB2}.
+     * @return the list of arrow threshold colours.
+     */
+    public List<String> getArrowThresholds() {
+        return arrowThresholds;
+    }
+
     // NOTE: equals and hashcode are defined in AbstractNcAnimateBean
 
     /**
@@ -318,7 +372,7 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
         json.put("colourPaletteName", this.colourPaletteName);
 
         json.put("colourSchemeType", this.colourSchemeType);
-        
+
         json.put("scaleMax", this.scaleMax);
         json.put("scaleMin", this.scaleMin);
 
@@ -333,6 +387,16 @@ public class NcAnimateNetCDFVariableBean extends AbstractNcAnimateBean {
 
         if (this.legend != null) {
             json.put("legend", this.legend.toJSON());
+        }
+
+        json.put("arrowColour", this.arrowColour);
+
+        if (this.arrowThresholds != null) {
+            JSONArray jsonArrowThresholds = new JSONArray();
+            for (String arrowThreshold : this.arrowThresholds) {
+                jsonArrowThresholds.put(arrowThreshold);
+            }
+            json.put("arrowThresholds", jsonArrowThresholds);
         }
 
         return json.isEmpty() ? null : json;

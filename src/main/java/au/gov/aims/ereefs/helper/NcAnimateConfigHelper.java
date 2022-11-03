@@ -383,6 +383,9 @@ public class NcAnimateConfigHelper {
     }
 
     private void combineLegendParts(NcAnimateConfigBean config, NcAnimateLegendBean legend) throws Exception {
+        // If "defaults.legend" refer to a legend ID, find that legend from the DB
+        // and put that object in "defaults.legend".
+        // The legend overwrite in layers appends in "combinePanelParts".
         if (legend != null) {
             // Legend part
             NcAnimateIdBean legendId = legend.getId();
@@ -501,60 +504,63 @@ public class NcAnimateConfigHelper {
 
                 // Variable
                 NcAnimateNetCDFVariableBean variableOverwrites = layer.getVariable();
-                if (variableOverwrites != null) {
-                    NcAnimateIdBean variableId = variableOverwrites.getId();
-                    if (variableId != null) {
-                        String variableIdStr = variableId.getValue();
-                        if (variableIdStr != null && !variableIdStr.isEmpty()) {
-                            JSONObject jsonVariable = this.configPartManager.select(ConfigPartManager.Datatype.VARIABLE, variableIdStr);
-                            if (jsonVariable != null) {
-                                NcAnimateNetCDFVariableBean variable = new NcAnimateNetCDFVariableBean(new JSONWrapperObject(jsonVariable));
-                                variableOverwrites.overwrite(variable, variableOverwrites);
-
-                                layer.addAllNeverVisited("variable["+variableIdStr+"]", variable.getNeverVisited());
-                                config.addLastModifiedConfigPart(variable);
-                            } else {
-                                LOGGER.error(String.format("Layer variable ID \"%s\" could not be found in the database. Using variable config found in NcAnimate config:%n%s",
-                                    variableIdStr, variableOverwrites));
-                            }
-                        }
-                    }
-
-                    if (defaultLegend != null) {
-                        NcAnimateLegendBean legendConfOverwrite = variableOverwrites.getLegend();
-                        if (legendConfOverwrite == null) {
-                            legendConfOverwrite = defaultLegend;
-                            this.combineLegendParts(config, legendConfOverwrite);
-                            variableOverwrites.setLegend(legendConfOverwrite);
-                        } else {
-                            this.combineLegendParts(config, legendConfOverwrite);
-                            legendConfOverwrite.overwrite(defaultLegend, legendConfOverwrite);
-                        }
-
-                        variableOverwrites.addAllNeverVisited("legend", legendConfOverwrite.getNeverVisited());
-                    }
-                }
+                this.applyVariableOverwrites(config, layer, variableOverwrites, "variable", defaultLegend);
 
                 // Arrow variable
                 NcAnimateNetCDFVariableBean arrowVariableOverwrites = layer.getArrowVariable();
-                if (arrowVariableOverwrites != null) {
-                    NcAnimateIdBean arrowVariableId = arrowVariableOverwrites.getId();
-                    if (arrowVariableId != null) {
-                        String arrowVariableIdStr = arrowVariableId.getValue();
-                        if (arrowVariableIdStr != null && !arrowVariableIdStr.isEmpty()) {
-                            JSONObject jsonArrowVariable = this.configPartManager.select(ConfigPartManager.Datatype.VARIABLE, arrowVariableIdStr);
-                            if (jsonArrowVariable != null) {
-                                NcAnimateNetCDFVariableBean arrowVariable = new NcAnimateNetCDFVariableBean(new JSONWrapperObject(jsonArrowVariable));
-                                arrowVariableOverwrites.overwrite(arrowVariable, arrowVariableOverwrites);
-                                layer.addAllNeverVisited("arrowVariable["+arrowVariableIdStr+"]", arrowVariable.getNeverVisited());
-                                config.addLastModifiedConfigPart(arrowVariable);
-                            } else {
-                                LOGGER.error(String.format("Layer arrowVariable ID \"%s\" could not be found in the database. Using variable config found in NcAnimate config:%n%s",
-                                    arrowVariableIdStr, arrowVariableOverwrites));
-                            }
-                        }
+                this.applyVariableOverwrites(config, layer, arrowVariableOverwrites, "arrowVariable", defaultLegend);
+            }
+        }
+    }
+
+    /**
+     * Private method used to apply variable overwrites
+     * and legend default values (found in "defaults.legend").
+     * @param config the {@link NcAnimateConfigBean} configuration document.
+     * @param layer the {@link NcAnimateLayerBean} layer containing the variable to overwrite.
+     * @param variableOverwrites the {@link NcAnimateNetCDFVariableBean} variable to overwrite.
+     * @param variableType "variable" or "arrowVariable", used with error messages.
+     * @param defaultLegend the {@link NcAnimateLegendBean} default values found in "defaults.legend".
+     * @throws Exception if the database is unreachable.
+     */
+    private void applyVariableOverwrites(
+            NcAnimateConfigBean config,
+            NcAnimateLayerBean layer,
+            NcAnimateNetCDFVariableBean variableOverwrites,
+            String variableType, // "variable" or "arrowVariable"
+            NcAnimateLegendBean defaultLegend
+    ) throws Exception {
+        if (variableOverwrites != null) {
+            NcAnimateIdBean variableId = variableOverwrites.getId();
+            if (variableId != null) {
+                String variableIdStr = variableId.getValue();
+                if (variableIdStr != null && !variableIdStr.isEmpty()) {
+                    JSONObject jsonVariable = this.configPartManager.select(ConfigPartManager.Datatype.VARIABLE, variableIdStr);
+                    if (jsonVariable != null) {
+                        NcAnimateNetCDFVariableBean variable = new NcAnimateNetCDFVariableBean(new JSONWrapperObject(jsonVariable));
+                        variableOverwrites.overwrite(variable, variableOverwrites);
+
+                        layer.addAllNeverVisited(variableType+"["+variableIdStr+"]", variable.getNeverVisited());
+                        config.addLastModifiedConfigPart(variable);
+                    } else {
+                        LOGGER.error(String.format("Layer %s ID \"%s\" could not be found in the database. Using variable config found in NcAnimate config:%n%s",
+                            variableType, variableIdStr, variableOverwrites));
                     }
                 }
+            }
+
+            if (defaultLegend != null) {
+                NcAnimateLegendBean legendConfOverwrite = variableOverwrites.getLegend();
+                if (legendConfOverwrite == null) {
+                    legendConfOverwrite = defaultLegend;
+                    this.combineLegendParts(config, legendConfOverwrite);
+                    variableOverwrites.setLegend(legendConfOverwrite);
+                } else {
+                    this.combineLegendParts(config, legendConfOverwrite);
+                    legendConfOverwrite.overwrite(defaultLegend, legendConfOverwrite);
+                }
+
+                variableOverwrites.addAllNeverVisited("legend", legendConfOverwrite.getNeverVisited());
             }
         }
     }

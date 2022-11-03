@@ -68,6 +68,10 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
     private Integer colourBandHeight;
     private Integer colourBandColourCount; // Number of colours used to render the layer and the legend
 
+    // Add extra space at the top and bottom of the colour band
+    private Float extraAmountOutOfRangeLow;
+    private Float extraAmountOutOfRangeHigh;
+
     private Integer majorTickMarkLength;
     private Integer minorTickMarkLength;
 
@@ -142,6 +146,9 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
             this.colourBandWidth = jsonLegend.get(Integer.class, "colourBandWidth");
             this.colourBandHeight = jsonLegend.get(Integer.class, "colourBandHeight");
             this.colourBandColourCount = jsonLegend.get(Integer.class, "colourBandColourCount");
+
+            this.extraAmountOutOfRangeLow = jsonLegend.get(Float.class, "extraAmountOutOfRangeLow");
+            this.extraAmountOutOfRangeHigh = jsonLegend.get(Float.class, "extraAmountOutOfRangeHigh");
 
             this.majorTickMarkLength = jsonLegend.get(Integer.class, "majorTickMarkLength");
             this.minorTickMarkLength = jsonLegend.get(Integer.class, "minorTickMarkLength");
@@ -297,6 +304,14 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
         return this.colourBandColourCount;
     }
 
+    public Float getExtraAmountOutOfRangeLow() {
+        return this.extraAmountOutOfRangeLow;
+    }
+
+    public Float getExtraAmountOutOfRangeHigh() {
+        return this.extraAmountOutOfRangeHigh;
+    }
+
     /**
      * Returns the length of the major tick marks in the legend, in pixels.
      * @return the length of the major tick marks in the legend, in pixels.
@@ -346,6 +361,9 @@ public class NcAnimateLegendBean extends AbstractNcAnimateBean {
         json.put("colourBandWidth", this.colourBandWidth);
         json.put("colourBandHeight", this.colourBandHeight);
         json.put("colourBandColourCount", this.colourBandColourCount);
+
+        json.put("extraAmountOutOfRangeLow", this.extraAmountOutOfRangeLow);
+        json.put("extraAmountOutOfRangeHigh", this.extraAmountOutOfRangeHigh);
 
         json.put("majorTickMarkLength", this.majorTickMarkLength);
         json.put("minorTickMarkLength", this.minorTickMarkLength);
