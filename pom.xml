@@ -6,7 +6,7 @@
 
     <groupId>au.gov.aims</groupId>
     <artifactId>ereefs-database</artifactId>
-    <version>0.6.26</version>
+    <version>0.7.0</version>
 
     <!--
         *** IMPORTANT ***
