@@ -10,12 +10,14 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.regex.Pattern;
 
 /**
  * This is a simple bean, used with the {@code ereefs-download-manager} project.
- * It represent the documents found in the MongoDB collection {@code download}.
+ * It represents the documents found in the MongoDB collection {@code download}.
  * It's describing a Download definition for a THREDDS catalogue.
  */
 public class DownloadBean extends AbstractBean {
@@ -26,6 +28,7 @@ public class DownloadBean extends AbstractBean {
 
     private String filenameTemplate;
     private String filenameRegexStr;
+    private Set<String> files;
 
     // List of catalogue URLs.
     // NOTE: Download definitions usually contain only one catalogue URL.
@@ -66,6 +69,7 @@ public class DownloadBean extends AbstractBean {
             this.catalogueUrls = null;
             this.addCatalogueUrl(jsonDownload.optString("catalogueUrl", null), null);
             this.addCatalogueUrls(jsonDownload.optJSONArray("catalogueUrls"));
+            this.addFiles(jsonDownload.optJSONArray("files"));
             this.setOutput(jsonDownload.optJSONObject("output"));
         }
     }
@@ -383,6 +387,46 @@ public class DownloadBean extends AbstractBean {
                     String subDirectory = catalogueUrlObj.optString("subDirectory", null);
                     this.addCatalogueUrl(catalogueUrl, subDirectory);
                 }
+            }
+        }
+    }
+
+    /**
+     * Get the manually provided list of files to download.
+     * This list will be null or empty unless it has been manually set by the user.
+     * @return list of files, specified as a {@code JSONArray}.
+     */
+    public Set<String> getFiles() {
+        return this.files;
+    }
+
+    /**
+     * Manually specify a list of files to be downloaded from the catalogue.
+     *
+     * @param jsonFiles list of files, specified as a {@code JSONArray}.
+     */
+    public void addFiles(JSONArray jsonFiles) {
+        if (jsonFiles != null && !jsonFiles.isEmpty()) {
+            for (int i=0; i<jsonFiles.length(); i++) {
+                this.addFile(jsonFiles.optString(i, null));
+            }
+        }
+    }
+
+    /**
+     * Add a file to be downloaded from the catalogue.
+     * NOTE: Adding a file will prevent the DownloadManager from downloading
+     *     the other files listed in the catalogue.
+     * @param fileStr file to download, as listed the catalogue.
+     */
+    public void addFile(String fileStr) {
+        if (fileStr != null) {
+            fileStr = fileStr.trim();
+            if (!fileStr.isEmpty()) {
+                if (this.files == null) {
+                    this.files = new HashSet<String>();
+                }
+                this.files.add(fileStr);
             }
         }
     }

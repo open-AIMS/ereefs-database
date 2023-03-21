@@ -40,12 +40,12 @@ public class DatabaseClient {
     private static final String AUTHENTICATION_SOURCE = "admin";
     private static final String VARIABLE_STORE_PREFIX_ENVIRONMENT_VARIABLE = "EXECUTION_ENVIRONMENT";
 
-    // NOTE: The database is not 100% reliable. Sometime it disconnect (example: during server backups).
+    // NOTE: The database is not 100% reliable. Sometimes it disconnect (example: during server backups).
     //     Each method that access the DB is in a loop that try to re-establish a connection to the DB
-    //     when it fail, up to X number of times, with a sufficient delay between retry to give a chance
+    //     when it fails, up to X number of times, with a sufficient delay between retry to give a chance
     //     to the DB to recover / restart.
     // 10 attempts = 10 seconds + 2*10 seconds + ... + 15*10 seconds = 1200 seconds
-    //     = 20 minutes (without considering timeout / running time of each attempts)
+    //     = 20 minutes (without considering timeout / running time of each attempt)
     private static final int DEFAULT_DB_RETRY_ATTEMPTS = 15;
     private static final int DEFAULT_DB_INITIAL_DELAY_BETWEEN_ATTEMPT = 10; // in seconds
 
